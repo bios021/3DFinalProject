@@ -725,6 +725,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1350202116}
+    - targetCorrespondingSourceObject: {fileID: 2769507199256119399, guid: d01e46ed3905b6e4d96a6458d14fc726,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1350202118}
   m_SourcePrefab: {fileID: 100100000, guid: d01e46ed3905b6e4d96a6458d14fc726, type: 3}
 --- !u!1 &1350202115 stripped
 GameObject:
@@ -782,6 +786,75 @@ CapsuleCollider:
   m_Height: 4
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1350202118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1350202115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3dc697af041a5546a5b38ef4d03fe04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stageCenter: {fileID: 1410991424}
+  rushSpeed: 2
+  damage: 10
+--- !u!1 &1386137721
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1386137723}
+  - component: {fileID: 1386137722}
+  m_Layer: 0
+  m_Name: CrazyFansController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1386137722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386137721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05e2e1cf2a4a81e4295bcb1a9c0da1ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stageCenter: {fileID: 1410991424}
+  outerRadius: 10
+  innerRadius: 5
+  CrazyFan_Purple: {fileID: 690086139}
+  Character_Gray: {fileID: 1350202115}
+  Character_Green: {fileID: 1454382685}
+  Character_Pink: {fileID: 2134050653}
+  spawnOnStart: 1
+  spawnCount: 10
+  parentToThis: 1
+--- !u!4 &1386137723
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386137721}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8.84, y: 1, z: -8.35}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1410991423
 GameObject:
   m_ObjectHideFlags: 0
@@ -888,6 +961,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1454382686}
+    - targetCorrespondingSourceObject: {fileID: 5090587081827196812, guid: 6285cf03d162d9b4d86e7376b1040cc8,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1454382688}
   m_SourcePrefab: {fileID: 100100000, guid: 6285cf03d162d9b4d86e7376b1040cc8, type: 3}
 --- !u!1 &1454382685 stripped
 GameObject:
@@ -945,6 +1022,21 @@ CapsuleCollider:
   m_Height: 4
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1454382688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1454382685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3dc697af041a5546a5b38ef4d03fe04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stageCenter: {fileID: 1410991424}
+  rushSpeed: 2
+  damage: 10
 --- !u!1 &1994112215
 GameObject:
   m_ObjectHideFlags: 0
@@ -1138,6 +1230,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2134050654}
+    - targetCorrespondingSourceObject: {fileID: 3187384679435710046, guid: c1e7e3c9fe3257f4ea9f080e7208ec3b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2134050656}
   m_SourcePrefab: {fileID: 100100000, guid: c1e7e3c9fe3257f4ea9f080e7208ec3b, type: 3}
 --- !u!1 &2134050653 stripped
 GameObject:
@@ -1195,6 +1291,21 @@ CapsuleCollider:
   m_Height: 4
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &2134050656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2134050653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3dc697af041a5546a5b38ef4d03fe04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stageCenter: {fileID: 1410991424}
+  rushSpeed: 2
+  damage: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1207,3 +1318,4 @@ SceneRoots:
   - {fileID: 1350202114}
   - {fileID: 1454382684}
   - {fileID: 2134050652}
+  - {fileID: 1386137723}
