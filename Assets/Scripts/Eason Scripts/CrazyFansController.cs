@@ -32,32 +32,87 @@ public class CrazyFansController : MonoBehaviour
 
     void Awake()
     {
-        // 建立可用 prefab 列表（忽略為 null 的）
-        prefabs.Clear();
-        if (CrazyFan_Purple != null) prefabs.Add(CrazyFan_Purple);
-        if (Character_Gray != null) prefabs.Add(Character_Gray);
-        if (Character_Green != null) prefabs.Add(Character_Green);
-        if (Character_Pink != null) prefabs.Add(Character_Pink);
+        RebuildPrefabList();
     }
 
     void Start()
     {
+        // 如果未在 Inspector 指派 stageCenter，嘗試自動尋找場景中的 StageCenter
+        if (stageCenter == null)
+        {
+            // 優先用 Tag 查找（請在場景中將中心物件設 Tag = "StageCenter"）
+            GameObject found = null;
+            try
+            {
+                found = GameObject.FindWithTag("StageCenter");
+            }
+            catch (UnityException)
+            {
+                // 如果 Tag 不存在，FindWithTag 會拋出例外，這裡忽略並改用名稱搜尋
+                found = null;
+            }
+
+            if (found == null)
+            {
+                // 若沒設定 Tag，改用名稱查找（場景物件名稱為 "StageCenter"）
+                found = GameObject.Find("StageCenter");
+            }
+
+            if (found != null)
+            {
+                stageCenter = found.transform;
+                Debug.Log($"CrazyFansController: 自動找到 StageCenter -> {found.name}");
+            }
+            else
+            {
+                Debug.LogWarning("CrazyFansController: 未指定 stageCenter，且場景中找不到 Tag 或 Name 為 'StageCenter' 的物件。請在 Inspector 指定或在場景建立 StageCenter（並設定 Tag）。");
+            }
+        }
+
+        RebuildPrefabList();
+        Debug.Log($"CrazyFansController.Start: 可用 prefabs = {prefabs.Count}");
+        for (int i = 0; i < prefabs.Count; i++)
+        {
+            Debug.Log($"  prefab[{i}] = {(prefabs[i] != null ? prefabs[i].name : "null")}");
+        }
+
         if (spawnOnStart)
         {
-            // 如果 spawnDuration <= 0 或 spawnCount <= 0 則回退為立刻生成
             if (spawnCount <= 0 || spawnDuration <= 0f)
             {
                 SpawnMultiple(spawnCount);
             }
             else
             {
-                // 在 spawnDuration 秒內均勻生成 spawnCount 個（例如 spawnDuration=10, spawnCount=10 => 每秒1個）
                 spawnCoroutine = StartCoroutine(SpawnOverTime(spawnCount, spawnDuration));
             }
         }
     }
 
-    // 在 duration 秒內均勻生成 count 個
+    // 重新建立 internal prefab 清單（過濾 null 並在 Editor 下額外檢查場景物件）
+    private void RebuildPrefabList()
+    {
+        prefabs.Clear();
+        if (CrazyFan_Purple != null) prefabs.Add(CrazyFan_Purple);
+        if (Character_Gray != null) prefabs.Add(Character_Gray);
+        if (Character_Green != null) prefabs.Add(Character_Green);
+        if (Character_Pink != null) prefabs.Add(Character_Pink);
+
+        prefabs.RemoveAll(p => p == null);
+
+#if UNITY_EDITOR
+        foreach (var p in new List<GameObject>(prefabs))
+        {
+            if (p == null) continue;
+            // 若為場景物件，提醒（場景物件在執行時被 Destroy 會造成 MissingReferenceException）
+            if (p.scene.IsValid())
+            {
+                Debug.LogWarning($"CrazyFansController: 欄位使用了場景中的物件 ({p.name}) 而非 Prefab 資產。請在 Project 視窗拖入 Prefab（藍色）。");
+            }
+        }
+#endif
+    }
+
     private IEnumerator SpawnOverTime(int count, float duration)
     {
         if (stageCenter == null)
@@ -66,6 +121,7 @@ public class CrazyFansController : MonoBehaviour
             yield break;
         }
 
+        RebuildPrefabList();
         if (prefabs.Count == 0)
         {
             Debug.LogWarning("CrazyFansController: 沒有可用的 Prefab，請在 Inspector 指定。");
@@ -79,21 +135,25 @@ public class CrazyFansController : MonoBehaviour
             outerRadius = innerRadius + 0.1f;
         }
 
-        if (count <= 0)
-            yield break;
+        if (count <= 0) yield break;
 
         float interval = duration / count;
         for (int i = 0; i < count; i++)
         {
+            RebuildPrefabList();
+            if (prefabs.Count == 0)
+            {
+                Debug.LogWarning("CrazyFansController: 執行時沒有可用的 Prefab，停止後續生成。");
+                yield break;
+            }
+
             SpawnOne();
-            // 若最後一個不必等待則可檢查 i < count -1，但此處保持一致間隔
             yield return new WaitForSeconds(interval);
         }
 
         spawnCoroutine = null;
     }
 
-    // 生成指定數量（立即生成）
     public void SpawnMultiple(int count)
     {
         if (stageCenter == null)
@@ -102,6 +162,7 @@ public class CrazyFansController : MonoBehaviour
             return;
         }
 
+        RebuildPrefabList();
         if (prefabs.Count == 0)
         {
             Debug.LogWarning("CrazyFansController: 沒有可用的 Prefab，請在 Inspector 指定。");
@@ -121,23 +182,61 @@ public class CrazyFansController : MonoBehaviour
         }
     }
 
-    // 單個位置生成
+    // 加強除錯與保護的 SpawnOne
     public GameObject SpawnOne()
     {
         if (stageCenter == null) return null;
-        if (prefabs.Count == 0) return null;
+
+        RebuildPrefabList();
+        if (prefabs.Count == 0)
+        {
+            Debug.LogWarning("CrazyFansController.SpawnOne: 沒有可用的 Prefab，跳過生成。");
+            return null;
+        }
 
         Vector3 pos = RandomPointInAnnulus(stageCenter.position, innerRadius, outerRadius);
 
         GameObject prefab = prefabs[Random.Range(0, prefabs.Count)];
-        GameObject go = Instantiate(prefab, pos, Quaternion.identity, parentToThis ? transform : null);
-        return go;
+        if (prefab == null)
+        {
+            Debug.LogWarning("CrazyFansController.SpawnOne: 隨機選到的 prefab 為 null，跳過生成。");
+            return null;
+        }
+
+#if UNITY_EDITOR
+        if (prefab.scene.IsValid())
+        {
+            Debug.LogWarning($"CrazyFansController: 嘗試 Instantiate 場景物件 {prefab.name}（不是 Prefab 資產）。請改用 Project 裡的 Prefab。");
+            return null;
+        }
+#endif
+
+        // 詳細日誌，方便追蹤 Instantiate 是否發生例外
+        Debug.Log($"CrazyFansController: Instantiate {prefab.name} at {pos} parentToThis={parentToThis}");
+
+        try
+        {
+            GameObject go = Instantiate(prefab, pos, Quaternion.identity, parentToThis ? transform : null);
+
+            // 指派 stageCenter 給 CrazyFan 腳本（root 或子物件）
+            var fan = go.GetComponent<CrazyFan>();
+            if (fan == null) fan = go.GetComponentInChildren<CrazyFan>();
+            if (fan != null)
+            {
+                fan.stageCenter = stageCenter;
+            }
+
+            return go;
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"CrazyFansController: Instantiate 失敗，Prefab 名稱 = {prefab.name}. Exception: {ex}");
+            return null;
+        }
     }
 
-    // 在兩個半徑之間均勻取樣（XZ 平面），Y 以 center.y 為準
     private Vector3 RandomPointInAnnulus(Vector3 center, float rInner, float rOuter)
     {
-        // 均勻取樣環面半徑： r = sqrt( u*(R^2 - r^2) + r^2 )
         float rInnerSq = rInner * rInner;
         float rOuterSq = rOuter * rOuter;
         float u = Random.value;
@@ -151,7 +250,6 @@ public class CrazyFansController : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    // 在 Scene 視窗中繪製兩個圓（選取時），便於調整
     void OnDrawGizmosSelected()
     {
         if (stageCenter == null) return;
