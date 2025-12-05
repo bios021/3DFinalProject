@@ -1,101 +1,115 @@
 using UnityEngine;
-using System.Collections.Generic; // 需要這個來紀錄打過誰
+using System.Collections.Generic;
 
-[RequireComponent(typeof(SphereCollider))] // 強制要求要有圓形碰撞體
+[RequireComponent(typeof(SphereCollider))]
+[RequireComponent(typeof(Rigidbody))]
 public class Shockwave : MonoBehaviour
 {
-    [Header(" 震波基礎屬性")]
+    [Header("波動參數")]
     public float damage = 10f;           // 傷害值
-    public float knockbackForce = 5f;    // 擊退力道
-    public LayerMask targetLayer;        // 震波會打到誰 (例如 Enemy)
+    public float knockbackForce = 5f;    // 擊退力量
+    public LayerMask targetLayer;        // 目標 Layer 過濾
 
-    [Header(" 視覺與範圍屬性")]
-    public float expandSpeed = 10f;      // 擴散速度
-    public float maxRange = 5f;          // 最大半徑
-    public float fadeSpeed = 2f;         // 消失速度
-    public Color waveColor = Color.cyan; // 震波顏色
+    [Header("視覺與擴散參數")]
+    public float expandSpeed = 10f;      // 擴張速度
+    public float maxRange = 5f;          // 最大範圍（localScale.x）
+    public float fadeSpeed = 2f;         // 透明度淡出速度
+    public Color waveColor = Color.cyan; // 波形顏色
 
-    // 內部變數
+    [Header("碰到指定 Tag 的行為")]
+    public bool destroyMonsters = true;      // 若為 true，碰到指定 Tag 時刪除該物件
+    public string monsterTag = "Monster";    // 要刪除的目標 Tag（可在 Inspector 修改）
+
+    // 內部欄位
     private Material mat;
     private Color currentColor;
     private SphereCollider col;
-    private List<GameObject> hitList = new List<GameObject>(); // 防止同一個敵人被打兩次
+    private Rigidbody rb;
+    private List<GameObject> hitList = new List<GameObject>(); // 已命中的物件清單，避免重複處理
 
     void Start()
     {
-        // 1. 初始化碰撞體
+        // 設定 Collider 為 Trigger 並初始化半徑
         col = GetComponent<SphereCollider>();
-        col.isTrigger = true; // 設定為觸發器，才不會把人撞飛卡住
-        col.radius = 0.1f;    // 一開始很小
+        col.isTrigger = true;
+        col.radius = 0.1f;
 
-        // 2. 初始化視覺
-        transform.localScale = Vector3.zero; // 從0開始
+        // 確保有 Rigidbody，並不受物理影響（只用於觸發判定）
+        rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
+        rb.useGravity = false;
+
+        // 初始縮放與材質設定
+        transform.localScale = Vector3.zero;
         Renderer rend = GetComponent<Renderer>();
         if (rend != null)
         {
             mat = rend.material;
-            // 設定初始顏色
             mat.color = waveColor;
             currentColor = waveColor;
 
-            // 如果材質有 Emission (發光)，也可以設定
-            mat.SetColor("_EmissionColor", waveColor * 2f);
+            // 若材質支援 emission，就嘗試設定
+            if (mat.HasProperty("_EmissionColor"))
+                mat.SetColor("_EmissionColor", waveColor * 2f);
         }
     }
 
     void Update()
     {
-        // 1. 擴大震波 (視覺 + 碰撞範圍)
+        // 擴張
         float growth = expandSpeed * Time.deltaTime;
-
-        // 視覺變大
         transform.localScale += Vector3.one * growth;
 
-        // 2. 處理淡出
+        // 逐漸淡出顏色透明度
         if (mat != null)
         {
             currentColor.a -= fadeSpeed * Time.deltaTime;
             mat.color = currentColor;
         }
 
-        // 3. 銷毀條件 (超過最大範圍 或 完全透明)
-        if (transform.localScale.x >= maxRange || currentColor.a <= 0)
+        // 超過範圍或完全透明時銷毀自己
+        if (transform.localScale.x >= maxRange || currentColor.a <= 0f)
         {
             Destroy(gameObject);
         }
     }
 
-    // 當震波碰到東西時
     void OnTriggerEnter(Collider other)
     {
-        // 1. 檢查是否在目標圖層內 (例如只打敵人)
-        if (((1 << other.gameObject.layer) & targetLayer) != 0)
+        // 優先以 Tag 刪除（不受 LayerMask 約束），方便將 Prefab 標記為 Monster 即被刪除
+        if (destroyMonsters && other.CompareTag(monsterTag))
         {
-            // 2. 檢查這個敵人是否已經被打過了 (避免震波經過時每幀都造成傷害)
-            if (!hitList.Contains(other.gameObject))
-            {
-                hitList.Add(other.gameObject); // 加入名單
-                ApplyDamage(other.gameObject);
-            }
+            Debug.Log($"Shockwave：刪除目標 {other.gameObject.name}（Tag={monsterTag}）");
+            Destroy(other.gameObject);
+            return;
         }
+
+        // 若未以 Tag 刪除，才用 LayerMask 過濾
+        if (((1 << other.gameObject.layer) & targetLayer) == 0) return;
+
+        // 若已處理過則忽略
+        if (hitList.Contains(other.gameObject)) return;
+
+        hitList.Add(other.gameObject);
+
+        // 否則套用傷害或擊退
+        ApplyDamage(other.gameObject);
     }
 
     void ApplyDamage(GameObject target)
     {
-        // 這裡實作您的傷害邏輯，例如：
-        Debug.Log($"震波擊中了 {target.name}，造成 {damage} 點傷害！");
+        Debug.Log($"Shockwave：對 {target.name} 造成傷害處理（傷害 {damage}）");
 
-        // 範例：如果敵人身上有 EnemyHealth 腳本
+        // 範例：嘗試呼叫 EnemyHealth（如有）來扣血
         // var health = target.GetComponent<EnemyHealth>();
-        // if(health != null) health.TakeDamage(damage);
+        // if (health != null) health.TakeDamage(damage);
 
-        // 範例：施加擊退力 (Knockback)
-        Rigidbody rb = target.GetComponent<Rigidbody>();
-        if (rb != null)
+        // 若有 Rigidbody 則加上擊退力
+        Rigidbody targetRb = target.GetComponent<Rigidbody>();
+        if (targetRb != null)
         {
-            // 計算擊退方向：從震波中心往敵人方向推
             Vector3 direction = (target.transform.position - transform.position).normalized;
-            rb.AddForce(direction * knockbackForce, ForceMode.Impulse);
+            targetRb.AddForce(direction * knockbackForce, ForceMode.Impulse);
         }
     }
 }
