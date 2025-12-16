@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: ultrasound_bow
   icon: {fileID: 21300000, guid: f049b8f6e6c70664abce7e9de8fc5a5c, type: 3}
-  prefab: {fileID: 0}
+  prefab: {fileID: 289621041455143813, guid: e3d5628fb7ecb6d4fa501eca7dc1c3f9, type: 3}
