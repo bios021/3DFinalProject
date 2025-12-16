@@ -2,19 +2,32 @@ using UnityEngine;
 
 public class ItemPickup : MonoBehaviour
 {
-    public ItemData itemData; // 在這裡指定這是什麼道具
+    public ItemData itemData;
+
+    // 1. 加這把鎖！預設是 false (沒被撿過)
+    private bool isPickedUp = false; 
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) // 確保是玩家碰到
+        // 2. 如果鎖已經鎖上了，代表剛剛已經有人撿走我了，直接無視這次碰撞
+        if (isPickedUp) return;
+
+        if (other.CompareTag("Player"))
         {
-            // 找到場景上的 InventoryManager (也可以用單例模式，這邊簡單用 Find)
             InventoryManager manager = FindObjectOfType<InventoryManager>();
-            
-            // 試著把道具放進去
-            if (manager.AddItem(itemData))
+            if (manager != null)
             {
-                Destroy(gameObject); // 撿起來後，刪除地上的模型
+                // 嘗試加入包包
+                bool success = manager.AddItem(itemData);
+                
+                // 只有真的成功加入包包，才鎖起來並銷毀
+                if (success)
+                {
+                    // 3. 鎖上！防止 0.01 秒後的第二次觸發
+                    isPickedUp = true; 
+                    
+                    Destroy(gameObject);
+                }
             }
         }
     }

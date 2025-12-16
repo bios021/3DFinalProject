@@ -7,11 +7,12 @@ public class InventoryManager : MonoBehaviour
 
     void Start()
     {
-        SelectSlot(0);
+        SelectSlot(0); // 遊戲開始選第一格
     }
 
     void Update()
     {
+        // 你的按鍵邏輯...
         if (Input.GetKeyDown(KeyCode.Alpha1)) SelectSlot(0);
         if (Input.GetKeyDown(KeyCode.Alpha2)) SelectSlot(1);
         if (Input.GetKeyDown(KeyCode.Alpha3)) SelectSlot(2);
@@ -21,45 +22,28 @@ public class InventoryManager : MonoBehaviour
 
     void SelectSlot(int index)
     {
-        // 【新增】檢查目標格子是否為空
-        if (slots[index].IsEmpty())
-        {
-            Debug.Log($"第 {index + 1} 格是空的,無法選取!");
-            return; // 如果是空的就不切換
-        }
+        // 防呆：避免超出陣列範圍
+        if (index < 0 || index >= slots.Length) return;
 
-        // 取消舊的選取
-        slots[selectedSlotIndex].Deselect();
-
-        // 更新索引
+        slots[selectedSlotIndex].Deselect(); // 關舊的框框
         selectedSlotIndex = index;
-
-        // 選取新的格子
-        slots[selectedSlotIndex].Select();
-
-        // 【新增】顯示選中的道具提示
-        Debug.Log($"選中了: {slots[selectedSlotIndex].GetItemName()}");
+        slots[selectedSlotIndex].Select();   // 開新的框框
     }
 
     public bool AddItem(ItemData newItem)
     {
+        // 迴圈：從第 0 格檢查到第 4 格
         for (int i = 0; i < slots.Length; i++)
         {
+            // 找到第一個空格
             if (slots[i].IsEmpty())
             {
-                slots[i].AddItem(newItem);
-                
-                // 【新增】如果是第一個道具,自動選中它
-                if (i == 0 && selectedSlotIndex == 0)
-                {
-                    slots[0].Select();
-                    Debug.Log($"撿到道具: {newItem.itemName}");
-                }
-                
-                return true;
+                slots[i].AddItem(newItem); // 放進去
+                return true; // 回報成功，並立刻結束這個函式！(重要)
             }
         }
-        Debug.Log("包包滿了!");
-        return false;
+        
+        Debug.Log("包包滿了！");
+        return false; // 包包滿了，回報失敗
     }
 }
