@@ -1,0 +1,219 @@
+[33mcommit a5b0056fc5d8f3845030d3beb191e8308dc58088[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mEason[m[33m, [m[1;31morigin/Eason[m[33m)[m
+Author: iJukeU <loeason.mail@gmail.com>
+Date:   Tue Dec 16 22:19:19 2025 +0800
+
+    12/16 10 PM line message
+
+[33mcommit e5e117e6ec97e98bc719e11bff74140495ff63a6[m
+Author: iJukeU <loeason.mail@gmail.com>
+Date:   Tue Dec 16 21:01:47 2025 +0800
+
+    Beans and player working
+
+[33mcommit 5288c9518d7db811f5095e676d256a6201c7b4d3[m
+Author: iJukeU <loeason.mail@gmail.com>
+Date:   Tue Dec 16 20:49:00 2025 +0800
+
+    Prefab MonsterBean,NormalBean
+
+[33mcommit 23aec88c0e105a2c9c878e2aecbb124e31c4a37c[m[33m ([m[1;31morigin/liutest1[m[33m)[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Tue Dec 16 19:00:16 2025 +0800
+
+    add decorations
+
+[33mcommit f9102276dd411749759dfe25480503337382bda6[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Tue Dec 16 18:51:52 2025 +0800
+
+    add lighting direction and some decoration
+
+[33mcommit 0775c24a13a78dce57fbe77a6d0e0ca60781cfab[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Tue Dec 16 17:06:31 2025 +0800
+
+    debug , the pickupUI is fixed
+
+[33mcommit fd9a4e49add5f01f9f8f80ae1aaba7a72817d0fd[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Tue Dec 16 15:34:09 2025 +0800
+
+    using claude code
+
+[33mcommit 0e13592c3e62f73d9ca9d5748736fcf879ca8e5a[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Tue Dec 16 14:37:08 2025 +0800
+
+    enable to pickup the items ,but the ui still has some problem...
+
+[33mcommit f38ae6fece54aefb416be8eb7b6c6f10a1e77860[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Tue Dec 16 11:47:06 2025 +0800
+
+    trying to add some itempickup scripts
+
+[33mcommit 3a7b443588030c57ad872c7a14179d425e7245f0[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Tue Dec 16 11:10:19 2025 +0800
+
+    trying add some items and its' UI
+
+[33mcommit 41933baecb051d9ec3625fc0dca4689dd3bedac3[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Tue Dec 16 09:47:45 2025 +0800
+
+    add some plain and wall
+
+[33mcommit 418760166a6c85dfeb8e59e5b2957b96343d18f4[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Mon Dec 15 23:03:09 2025 +0800
+
+    move enviroment
+
+[33mcommit 4b3aa8f246efd96230cf50529824834789a92d84[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Mon Dec 15 20:09:07 2025 +0800
+
+    edit enviroment 1
+
+[33mcommit cef3cd5bbae3675338793fe8d07bc390142cb47d[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Mon Dec 15 18:03:35 2025 +0800
+
+    add stairs
+
+[33mcommit 57f899abdab301e745da9ca1405ab1404b914073[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Mon Dec 15 17:07:05 2025 +0800
+
+    add some test enviorment
+
+[33mcommit 2fade1a0943acd3e050b7048e0ec680dc6a0c1bd[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Fri Dec 12 17:17:26 2025 +0800
+
+    tracking .fbx
+
+[33mcommit 16704c637606b3626784ba964782206c699027e0[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Fri Dec 12 16:27:48 2025 +0800
+
+    add some TestEnviorment
+
+[33mcommit 38e353e64ba3ac38dc9d57c8ba305a81c23d7c4f[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Fri Dec 12 16:26:53 2025 +0800
+
+    Configure Git LFS
+
+[33mcommit 6ed5dadac77fbf3cfb1983956f0a8404f5ec1a0f[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Fri Dec 12 16:06:55 2025 +0800
+
+    add testscene
+
+[33mcommit 4b705e12ca577cdb1ee14d17b3e56c7b0c0f9c0b[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Wed Dec 10 18:48:47 2025 +0800
+
+    import some envirment
+
+[33mcommit 85a292231ca81cea45607df8d7104de062ae249c[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Wed Dec 10 17:32:29 2025 +0800
+
+    add FirstPersonController and edit camera(to firstperon mode) ,but the character's animation is gone, it seem to because of the ControllerScript
+
+[33mcommit 4a9b67c10c926965e54561b257d0a8a8e4acb005[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Wed Dec 10 16:29:16 2025 +0800
+
+    add firstpesonmovement.cs to player , and removehis rigidbody
+
+[33mcommit 3ac936d7382aee4551278350c0291e4e15525908[m
+Author: iJukeU <loeason.mail@gmail.com>
+Date:   Fri Dec 5 14:26:18 2025 +0800
+
+    12/5
+
+[33mcommit f945289bea0e58a41f5af9fca89457f73897baa6[m
+Author: iJukeU <loeason.mail@gmail.com>
+Date:   Thu Dec 4 20:36:11 2025 +0800
+
+    last commit 12/4
+
+[33mcommit 60175e831cbcfe0dcef88920dc1d4013906fcb7e[m
+Author: iJukeU <loeason.mail@gmail.com>
+Date:   Thu Dec 4 20:31:36 2025 +0800
+
+    stage prefab
+
+[33mcommit 13292378b532c4a6ddf417c762372eb03ffed91b[m
+Author: bios021 <jimmij7887@gmail.com>
+Date:   Thu Dec 4 15:20:06 2025 +0800
+
+    add beatUI, volumeUI and sensitivitySlider
+
+[33mcommit 7e2d7d6f6157ed77c487fbdc8638df9ec21f3cf2[m
+Author: bios021 <jimmij7887@gmail.com>
+Date:   Wed Dec 3 21:45:49 2025 +0800
+
+    add audio input and shock wave generate
+
+[33mcommit 143feb84972c39dc26e3c79cc6d0b0262e154fbc[m
+Merge: 90c74bd 3b756fe
+Author: bios021 <144467137+bios021@users.noreply.github.com>
+Date:   Wed Dec 3 16:42:36 2025 +0800
+
+    Merge pull request #1 from bios021/Eason
+    
+    Create CrazyFans(4)
+
+[33mcommit 3b756feff1ee8c12791719856ce19eb72061da04[m
+Author: iJukeU <loeason.mail@gmail.com>
+Date:   Wed Dec 3 16:22:26 2025 +0800
+
+    FansSpawn
+
+[33mcommit 2d34cf6fa9009cdba7643e9e6f1c63250da57457[m
+Author: iJukeU <loeason.mail@gmail.com>
+Date:   Wed Dec 3 15:57:08 2025 +0800
+
+    Create CrazyFans(4)
+
+[33mcommit 90c74bd7f854595d28a0e5ac78f859d3bacb68c5[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Mon Dec 1 21:23:09 2025 +0800
+
+    import other necessary assets
+
+[33mcommit 5f3e36a86b32e9c8111083a7e454411185fe920b[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Mon Dec 1 20:39:59 2025 +0800
+
+    import unity asset - player model & shockwave model:
+
+[33mcommit 9027dc9dd771954fd8b07b166c06344a00e20132[m
+Author: LiuPoTing <aa122185549@gmail.com>
+Date:   Mon Dec 1 02:01:45 2025 +0800
+
+    [test]
+
+[33mcommit 1d2b691f28830cd612fabb8b1a41be317726f877[m
+Merge: 13785b9 83673ad
+Author: bios021 <jimmij7887@gmail.com>
+Date:   Sun Nov 30 16:32:14 2025 +0800
+
+    Merge branch 'main' of https://github.com/bios021/3DFinalProject
+
+[33mcommit 13785b9cd6c9de726bc5a604ad8b80f2a9602fa0[m
+Author: bios021 <jimmij7887@gmail.com>
+Date:   Sun Nov 30 16:08:14 2025 +0800
+
+    only files
+
+[33mcommit 83673adf5c1b34042c62cb58fbe08d91e590134c[m
+Author: bios021 <144467137+bios021@users.noreply.github.com>
+Date:   Fri Nov 28 20:09:01 2025 +0800
+
+    Initial commit
