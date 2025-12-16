@@ -4,30 +4,37 @@ using UnityEngine;
 
 public class MonsterBean : MonoBehaviour
 {
-    public enum State { Idle, Wander, MoveToSound, Aggro }
+    // 新增 Intimidate (威嚇) 與 Retreat (撤退) 狀態
+    public enum State { Idle, Wander, MoveToSound, Aggro, Intimidate, Retreat }
 
     [Header("基本設定")]
     public string playerTag = "Player";
-    public string normalBeanTag = "NormalBean"; // 請確保一般糖豆有此 Tag
+    public string normalBeanTag = "NormalBean"; 
     public bool debugGizmos = true;
 
-    [Header("狀態 1: 闲逛 (Wander)")]
-    public float roamRadius = 8f;           // 闲逛半徑
+    [Header("狀態 1: 閒逛 (Wander)")]
+    public float roamRadius = 8f;           
     public float wanderSpeed = 1.5f;
-    public float wanderChangeInterval = 3f; // 多久換一次閒逛目標
+    public float wanderChangeInterval = 3f; 
 
     [Header("狀態 2: 聽覺 (MoveToSound)")]
-    public float hearingRange = 15f;        // 聽覺範圍
-    public float hearingThreshold = 0.2f;   // 音量閾值
-    public float hearingCooldown = 1f;      // 冷卻時間
+    public float hearingRange = 15f;        
+    public float hearingThreshold = 0.2f;   
+    public float hearingCooldown = 1f;      
     public float moveToSoundSpeed = 2.5f;
 
-    [Header("狀態 3: 追逐 (Aggro) - 優先級最高")]
-    public float aggroRange = 5f;           // 偵測範圍
+    [Header("狀態 3: 追逐 (Aggro)")]
+    public float aggroRange = 5f;           
     public float chaseSpeed = 3.5f;
-    public float attackRange = 1.2f;
+    public float attackRange = 1.2f; // 攻擊距離
+    public float stopDistance = 1.0f; // 停止距離 (避免穿模)
     public float attackDamage = 10f;
     public float attackCooldown = 1.0f;
+
+    [Header("狀態 4: 威嚇與撤退 (Intimidate & Retreat)")]
+    public float intimidateDuration = 2.0f; // 貼臉時間 (需配合 Player 的 scareDuration)
+    public float retreatDistance = 5.0f;    // 攻擊後退多遠
+    public float retreatSpeed = 2.0f;
 
     // 內部變數
     private State state = State.Wander;
@@ -36,10 +43,11 @@ public class MonsterBean : MonoBehaviour
     private float lastWanderTime;
     private float lastHeardTime;
     private float lastAttackTime;
+    private float stateTimer = 0f; // 通用計時器 (給 Intimidate 和 Retreat 用)
 
     // 參考
     private RhythmCombat rhythmCombat;
-    private Transform currentTarget; // 目前追逐的目標
+    private Transform currentTarget; 
 
     void Start()
     {
@@ -56,31 +64,32 @@ public class MonsterBean : MonoBehaviour
     void Update()
     {
         // --- 決策邏輯 ---
-
-        // 1. 檢查 Aggro (視覺/感知)
-        Transform aggroTarget = FindAggroTarget();
-        if (aggroTarget != null)
+        // 如果處於特殊狀態 (威嚇或撤退)，鎖定決策，直到狀態結束
+        if (state == State.Intimidate || state == State.Retreat)
         {
-            state = State.Aggro;
-            currentTarget = aggroTarget;
+            // 繼續執行當前狀態行為
         }
         else
         {
-            // 沒發現目標，檢查聽覺 (僅在非 Aggro 時)
-            if (state != State.Aggro)
+            // 一般決策 (Aggro > Sound > Wander)
+            Transform aggroTarget = FindAggroTarget();
+            if (aggroTarget != null)
             {
-                CheckHearing();
+                state = State.Aggro;
+                currentTarget = aggroTarget;
             }
-
-            // 如果現在是 Aggro 但目標丟失了，回到 Wander
-            if (state == State.Aggro)
+            else
             {
-                state = State.Wander;
-                currentTarget = null;
+                if (state != State.Aggro) CheckHearing();
+                if (state == State.Aggro)
+                {
+                    state = State.Wander;
+                    currentTarget = null;
+                }
             }
         }
 
-        // 2. 執行狀態行為
+        // --- 執行狀態行為 ---
         switch (state)
         {
             case State.Wander:
@@ -91,6 +100,12 @@ public class MonsterBean : MonoBehaviour
                 break;
             case State.Aggro:
                 DoAggro();
+                break;
+            case State.Intimidate:
+                DoIntimidate();
+                break;
+            case State.Retreat:
+                DoRetreat();
                 break;
         }
     }
@@ -165,7 +180,7 @@ public class MonsterBean : MonoBehaviour
             return;
         }
 
-        // 檢查目標是否已經死亡 (如果是 NormalBean)
+        // 檢查目標是否死亡 (NormalBean)
         NormalBean bean = currentTarget.GetComponent<NormalBean>();
         if (bean != null && bean.isDead)
         {
@@ -176,6 +191,7 @@ public class MonsterBean : MonoBehaviour
 
         float dist = Vector3.Distance(transform.position, currentTarget.position);
 
+        // 追逐距離限制
         if (dist > aggroRange * 1.5f)
         {
             currentTarget = null;
@@ -183,39 +199,104 @@ public class MonsterBean : MonoBehaviour
             return;
         }
 
-        MoveTowards(currentTarget.position, chaseSpeed);
+        // 移動 (保持 stopDistance 避免穿模)
+        if (dist > stopDistance)
+        {
+            MoveTowards(currentTarget.position, chaseSpeed);
+        }
+        else
+        {
+            // 已經很近了，面向目標
+            Vector3 dir = currentTarget.position - transform.position;
+            dir.y = 0;
+            if (dir != Vector3.zero) transform.rotation = Quaternion.LookRotation(dir);
+        }
 
+        // 攻擊判定
         if (dist <= attackRange && Time.time - lastAttackTime >= attackCooldown)
         {
             lastAttackTime = Time.time;
             DoAttack(currentTarget.gameObject);
         }
     }
-    
+
+    private void DoIntimidate()
+    {
+        // 威嚇狀態：貼著玩家
+        if (currentTarget != null)
+        {
+            float dist = Vector3.Distance(transform.position, currentTarget.position);
+            
+            // 保持在極近距離 (例如 0.8f)，但不穿模
+            float intimidateDist = 2.5f; 
+            
+            if (dist > intimidateDist)
+            {
+                MoveTowards(currentTarget.position, chaseSpeed); // 追上去貼臉
+            }
+            
+            // 強制面向玩家
+            Vector3 dir = currentTarget.position - transform.position;
+            dir.y = 0;
+            if (dir != Vector3.zero) transform.rotation = Quaternion.LookRotation(dir);
+        }
+
+        // 計時結束 -> 進入撤退
+        stateTimer -= Time.deltaTime;
+        if (stateTimer <= 0)
+        {
+            state = State.Retreat;
+            // 設定撤退目標 (背對玩家的方向)
+            if (currentTarget != null)
+            {
+                Vector3 awayDir = (transform.position - currentTarget.position).normalized;
+                wanderTarget = transform.position + awayDir * retreatDistance;
+            }
+            else
+            {
+                PickNewWanderTarget(); // 玩家不見了就隨便跑
+            }
+        }
+    }
+
+    private void DoRetreat()
+    {
+        // 撤退狀態：遠離玩家
+        MoveTowards(wanderTarget, retreatSpeed);
+
+        // 到達撤退點或距離夠遠 -> 回到 Wander
+        if (Vector3.Distance(transform.position, wanderTarget) < 0.5f)
+        {
+            state = State.Wander;
+            currentTarget = null; // 放棄仇恨
+            lastAttackTime = Time.time; // 重置攻擊冷卻，避免立刻回頭咬
+        }
+    }
+
     private void DoAttack(GameObject target)
     {
         if (target.CompareTag(normalBeanTag))
         {
             Debug.Log($"MonsterBean: 捕食一般糖豆 {target.name}");
-            
-            // 嘗試取得 NormalBean 腳本並呼叫 Die
             NormalBean bean = target.GetComponent<NormalBean>();
-            if (bean != null)
-            {
-                bean.Die();
-            }
-            else
-            {
-                // 如果沒掛腳本，直接刪除 (Fallback)
-                Destroy(target);
-            }
-            
-            currentTarget = null; // 攻击后重置目标，寻找下一個
+            if (bean != null) bean.Die();
+            else Destroy(target);
+            currentTarget = null;
         }
         else if (target.CompareTag(playerTag))
         {
-            Debug.Log($"MonsterBean: 攻擊玩家 {target.name}，傷害 {attackDamage}");
-            target.SendMessage("TakeDamage", attackDamage, SendMessageOptions.DontRequireReceiver);
+            Debug.Log($"MonsterBean: 攻擊玩家 {target.name}");
+            
+            // 呼叫 Player 的 TakeDamage，並傳入自己 (attacker)
+            Player playerScript = target.GetComponent<Player>();
+            if (playerScript != null)
+            {
+                playerScript.TakeDamage(attackDamage, transform);
+                
+                // 進入威嚇狀態
+                state = State.Intimidate;
+                stateTimer = intimidateDuration;
+            }
         }
     }
 
@@ -229,10 +310,13 @@ public class MonsterBean : MonoBehaviour
         {
             Quaternion rot = Quaternion.LookRotation(dir);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 10f);
+            
+            // 簡單防穿模：如果前方有障礙物就不移動 (或是依賴 CharacterController/Rigidbody)
+            // 這裡假設用 Transform 移動，所以依賴 stopDistance 邏輯
             transform.position += transform.forward * speed * Time.deltaTime;
         }
     }
-
+    
     private void PickNewWanderTarget()
     {
         Vector2 rnd = Random.insideUnitCircle * roamRadius;

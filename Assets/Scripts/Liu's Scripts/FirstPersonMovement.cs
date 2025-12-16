@@ -14,6 +14,9 @@ public class FirstPersonController : MonoBehaviour
     
     [Header("參考物件")]
     public Transform cameraTransform; // 把相機拖進來
+
+    // --- 新增：控制是否鎖定輸入 ---
+    public bool lockInput = false; 
     
     // 私有變數
     private CharacterController controller;
@@ -47,16 +50,20 @@ public class FirstPersonController : MonoBehaviour
             velocity.y = -2f; // 確保穩定貼地
         }
         
-        // 處理滑鼠視角
-        HandleMouseLook();
+        // --- 修改：若被鎖定則不處理輸入 ---
+        if (!lockInput)
+        {
+            // 處理滑鼠視角
+            HandleMouseLook();
+            
+            // 處理移動
+            HandleMovement();
+            
+            // 處理跳躍
+            HandleJump();
+        }
         
-        // 處理移動
-        HandleMovement();
-        
-        // 處理跳躍
-        HandleJump();
-        
-        // 應用重力
+        // 應用重力 (即使鎖定輸入也要受重力影響)
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
         
@@ -81,6 +88,21 @@ public class FirstPersonController : MonoBehaviour
         
         // 左右旋轉 (yaw) - 控制角色本體
         transform.Rotate(Vector3.up * mouseX);
+    }
+
+    // --- 新增：允許外部強制設定視角 ---
+    public void ForceLookAt(Vector3 targetPosition)
+    {
+        // 計算目標方向
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        
+        // 設定身體水平旋轉 (Yaw)
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+
+        // 設定相機垂直旋轉 (Pitch) - 簡單版，直接看向目標高度
+        // 若要精確控制 xRotation 需要反算角度，這裡簡化為讓身體轉向即可，相機保持水平或微調
+        // 為了避免複雜的歐拉角計算，這裡主要控制身體轉向怪物
     }
     
     void HandleMovement()
