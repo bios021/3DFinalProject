@@ -8,6 +8,84 @@ public class NormalBean : MonoBehaviour
     public float destroyDelay = 3.0f; // 倒下後多久消失
     public bool isDead = false;       // 是否已經死亡（唯讀）
 
+    [Header("聲音引導移動設定")]
+    public float moveSpeed = 2.0f;          // 移動速度
+    public float hearingRange = 15.0f;      // 聽覺範圍 (超過此距離聽不到)
+    public float hearingThreshold = 0.15f;  // 音量閾值 (超過此音量才移動)
+    public float stopDistance = 1.5f;       // 距離玩家多近停止 (避免穿模)
+
+    private RhythmCombat rhythmCombat;      // 用來取得音量與玩家位置
+    private Animator animator;              // 用來控制動畫
+
+    void Start()
+    {
+        // 取得場景中的 RhythmCombat
+        rhythmCombat = FindObjectOfType<RhythmCombat>();
+        if (rhythmCombat == null)
+        {
+            Debug.LogWarning($"{name}: 找不到 RhythmCombat，無法偵測聲音。");
+        }
+
+        animator = GetComponent<Animator>();
+    }
+
+    void Update()
+    {
+        if (isDead) return; // 死亡後不執行移動邏輯
+
+        HandleSoundMovement();
+    }
+
+    void HandleSoundMovement()
+    {
+        bool isMoving = false;
+
+        if (rhythmCombat != null)
+        {
+            // 1. 取得目標位置 (玩家/麥克風位置)
+            // RhythmCombat.spawnPoint 通常是玩家位置或聲源中心
+            Transform target = (rhythmCombat.spawnPoint != null) ? rhythmCombat.spawnPoint : rhythmCombat.transform;
+
+            // 2. 計算距離
+            float distance = Vector3.Distance(transform.position, target.position);
+
+            // 3. 判斷是否在聽覺範圍內 且 尚未貼到玩家臉上
+            if (distance <= hearingRange && distance > stopDistance)
+            {
+                // 4. 判斷音量是否足夠
+                if (rhythmCombat.CurrentVolume > hearingThreshold)
+                {
+                    MoveTowards(target.position);
+                    isMoving = true;
+                }
+            }
+        }
+
+        // 5. 更新動畫 (若有 Animator)
+        if (animator != null)
+        {
+            // 請確保 Animator Controller 有 "isWalking" (bool) 參數，或自行修改參數名稱
+            animator.SetBool("isWalking", isMoving);
+        }
+    }
+
+    void MoveTowards(Vector3 targetPos)
+    {
+        // 計算方向 (忽略 Y 軸高度差)
+        Vector3 dir = targetPos - transform.position;
+        dir.y = 0;
+
+        if (dir.sqrMagnitude > 0.001f)
+        {
+            // 轉向目標
+            Quaternion targetRot = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 10f);
+
+            // 前進
+            transform.position += transform.forward * moveSpeed * Time.deltaTime;
+        }
+    }
+
     // 呼叫此函式來觸發死亡流程
     public void Die()
     {
@@ -25,9 +103,8 @@ public class NormalBean : MonoBehaviour
         var agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         if (agent != null) agent.enabled = false;
 
-        // 2. 停止動畫 (新增)
+        // 2. 停止動畫
         // 停用 Animator 以防止它繼續控制模型姿勢或覆蓋旋轉
-        var animator = GetComponent<Animator>();
         if (animator != null)
         {
             animator.enabled = false;
