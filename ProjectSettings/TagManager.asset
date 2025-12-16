@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Monster
   - StageCenter
+  - NormalBean
   layers:
   - Default
   - TransparentFX
