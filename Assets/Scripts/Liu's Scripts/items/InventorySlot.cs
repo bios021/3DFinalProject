@@ -3,28 +3,38 @@ using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour
 {
-    public Image iconImage;       // 拉進來：顯示圖案的 Image
-    public GameObject highlight;  // 拉進來：選取框框的物件
+    public Image iconImage;       // 顯示 Icon 的圖片
+    public GameObject highlight;  // 選取框框
 
-    private ItemData currentItem; // 現在這個格子裝了什麼
+    private ItemData currentItem; // 這裡面裝什麼
 
-    // 當撿到道具時，更新這個格子的顯示
+    // 【這裡改了！】當撿到道具時，立刻顯示！
     public void AddItem(ItemData newItem)
     {
         currentItem = newItem;
+        
+        // 1. 設定圖片
         iconImage.sprite = newItem.icon;
-        iconImage.enabled = true; // 顯示圖片
+        
+        // 2. 關鍵：把圖片組件打開 (之前可能預設是關的)
+        iconImage.enabled = true; 
+
+        // 3. 保險起見：確保顏色是「白色且不透明」
+        // 有時候顏色會變成透明的，導致有圖也看不到
+        iconImage.color = new Color(1, 1, 1, 1); 
     }
 
-    // 清空格子用
+    // 當清空格子時
     public void ClearSlot()
     {
         currentItem = null;
         iconImage.sprite = null;
-        iconImage.enabled = false; // 隱藏圖片
+        
+        // 關鍵：沒東西時把圖片關掉，不然會看到一個白方塊
+        iconImage.enabled = false; 
     }
 
-    // 當被選中時 (按下 12345)
+    // 當被選中時 (只負責處理框框，不要處理 Icon)
     public void Select()
     {
         highlight.SetActive(true);
@@ -36,7 +46,6 @@ public class InventorySlot : MonoBehaviour
         highlight.SetActive(false);
     }
     
-    // 讓外部知道這個格子是不是空的
     public bool IsEmpty()
     {
         return currentItem == null;

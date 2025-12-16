@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 319734ba26c6f7141aa4381967ead70a, type: 3}
   m_Name: sweet_beams
   m_EditorClassIdentifier: 
-  itemName: 
-  icon: {fileID: 0}
-  prefab: {fileID: 0}
+  itemName: sweet_beams
+  icon: {fileID: 21300000, guid: 683f3aaef2e07cc45a854a97e43ee082, type: 3}
+  prefab: {fileID: 3187384679435710046, guid: c1e7e3c9fe3257f4ea9f080e7208ec3b, type: 3}
