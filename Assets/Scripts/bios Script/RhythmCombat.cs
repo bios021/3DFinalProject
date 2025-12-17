@@ -24,18 +24,13 @@ public class RhythmCombat : MonoBehaviour
     public bool showDebugLog = true;
 
     [Header("視覺與音效")]
-    public GameObject shockwavePrefab;
-    public Transform spawnPoint;
+    public Transform spawnPoint; // 保留 spawnPoint 供其他腳本 (如 MonsterBean) 參考聲源位置
     public AudioSource beatMusic;
     public AudioSource sfxSource;
     public AudioClip successClip;
 
     [Range(1f, 100f)]
     public float sensitivityMultiplier = 1000f; // 預設放大 10 倍
-
-    [Header("震波微調")]
-    public Vector3 effectRotation = new Vector3(90, 0, 0);
-    public float heightOffset = 0.1f;
 
     // --- 內部變數 ---
     private float beatInterval;
@@ -161,14 +156,7 @@ public class RhythmCombat : MonoBehaviour
             centerMarker.color = successColor;
         }
 
-        // 生成特效與音效
-        if (shockwavePrefab != null)
-        {
-            Vector3 pos = spawnPoint != null ? spawnPoint.position : transform.position;
-            pos.y += heightOffset;
-            Instantiate(shockwavePrefab, pos, Quaternion.Euler(effectRotation));
-        }
-
+        // 播放成功音效
         if (sfxSource != null && successClip != null)
         {
             sfxSource.PlayOneShot(successClip);
