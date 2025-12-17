@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 160333da8233ad04fb2adb309a4d6510
+guid: 125e583e85049e446976812deaa84558
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,13 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Mat_Walls
-    second: {fileID: 2100000, guid: 33c1141e55fbc1947a20924eb0d67d8c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Mat_Windows_Doors
-    second: {fileID: 2100000, guid: bfe47ccf6cceef34eb48a7453fae5073, type: 2}
+      name: Stand
+    second: {fileID: 2100000, guid: 6212830fb37ef9e49b8adb3630879e42, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
