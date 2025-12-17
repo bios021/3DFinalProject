@@ -2175,7 +2175,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -2196,6 +2196,7 @@ RectTransform:
   - {fileID: 385887826}
   - {fileID: 1436791805}
   - {fileID: 670975250}
+  - {fileID: 1541182955}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4123,6 +4124,7 @@ SceneRoots:
   - {fileID: 1658211532}
   - {fileID: 1211363425}
   - {fileID: 681808798}
+  - {fileID: 845377599}
   - {fileID: 1242729590131479069}
   - {fileID: 1436258260}
   - {fileID: 1278210095}
