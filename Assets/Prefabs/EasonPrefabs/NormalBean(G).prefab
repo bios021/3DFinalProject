@@ -392,6 +392,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destroyDelay: 3
   isDead: 0
+  moveSpeed: 2
+  hearingRange: 15
+  hearingThreshold: 0.15
+  stopDistance: 1.5
 --- !u!1 &2897793252373359917
 GameObject:
   m_ObjectHideFlags: 0
