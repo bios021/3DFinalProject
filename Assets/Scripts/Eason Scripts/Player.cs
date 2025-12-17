@@ -18,6 +18,10 @@ public class Player : MonoBehaviour
     [Header("UI 顯示")]
     public TMP_Text healthText;        // 修改：改用 TMP_Text 以支援 TextMeshPro
 
+    [Header("音效設定")]
+    public AudioSource audioSource;    // 拖入 AudioSource 組件
+    public AudioClip scareSound;       // 拖入被嚇到的音效 (短促)
+
     private FirstPersonController fpsController;
     private float scareTimer = 0f;
 
@@ -109,6 +113,13 @@ public class Player : MonoBehaviour
         {
             scareImage.gameObject.SetActive(true);
         }
+
+        // 播放驚嚇音效
+        if (audioSource != null && scareSound != null)
+        {
+            audioSource.clip = scareSound;
+            audioSource.Play();
+        }
     }
 
     void RecoverFromScare()
@@ -125,6 +136,12 @@ public class Player : MonoBehaviour
         if (scareImage != null)
         {
             scareImage.gameObject.SetActive(false);
+        }
+
+        // 停止音效 (確保不超過驚嚇時間)
+        if (audioSource != null)
+        {
+            audioSource.Stop();
         }
     }
 

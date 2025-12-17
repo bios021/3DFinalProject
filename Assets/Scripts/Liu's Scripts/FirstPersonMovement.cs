@@ -15,6 +15,12 @@ public class FirstPersonController : MonoBehaviour
     [Header("參考物件")]
     public Transform cameraTransform; // 把相機拖進來
 
+    [Header("音效設定 (連續長音效專用)")]
+    public AudioSource footstepSource;      // 拖入 AudioSource
+    public AudioClip continuousFootstepClip;// 拖入那個 14秒 的連續腳步聲
+    public float walkPitch = 1.0f;          // 走路時的播放速度 (音調)
+    public float sprintPitch = 1.5f;        // 跑步時的播放速度 (音調)
+
     // --- 新增：控制是否鎖定輸入 ---
     public bool lockInput = false; 
     
@@ -38,6 +44,14 @@ public class FirstPersonController : MonoBehaviour
         // 鎖定並隱藏滑鼠游標
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        // 初始化音效設定
+        if (footstepSource != null && continuousFootstepClip != null)
+        {
+            footstepSource.clip = continuousFootstepClip;
+            footstepSource.loop = true; // 設定為循環播放
+            footstepSource.playOnAwake = false;
+        }
     }
     
     void Update()
@@ -61,6 +75,17 @@ public class FirstPersonController : MonoBehaviour
             
             // 處理跳躍
             HandleJump();
+
+            // 處理腳步聲
+            HandleFootsteps();
+        }
+        else
+        {
+            // 如果輸入被鎖定 (例如被嚇到時)，強制停止腳步聲
+            if (footstepSource != null && footstepSource.isPlaying)
+            {
+                footstepSource.Stop();
+            }
         }
         
         // 應用重力 (即使鎖定輸入也要受重力影響)
@@ -99,10 +124,6 @@ public class FirstPersonController : MonoBehaviour
         // 設定身體水平旋轉 (Yaw)
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
-
-        // 設定相機垂直旋轉 (Pitch) - 簡單版，直接看向目標高度
-        // 若要精確控制 xRotation 需要反算角度，這裡簡化為讓身體轉向即可，相機保持水平或微調
-        // 為了避免複雜的歐拉角計算，這裡主要控制身體轉向怪物
     }
     
     void HandleMovement()
@@ -126,6 +147,41 @@ public class FirstPersonController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
+        }
+    }
+
+    // --- 修改：處理連續腳步聲 ---
+    void HandleFootsteps()
+    {
+        if (footstepSource == null || continuousFootstepClip == null) return;
+
+        // 取得水平移動速度 (忽略 Y 軸)
+        Vector3 horizontalVelocity = new Vector3(controller.velocity.x, 0, controller.velocity.z);
+        bool isMoving = horizontalVelocity.magnitude > 0.1f;
+    
+        if (isMoving)
+        {
+            // 如果還沒播放，就開始播放
+            if (!footstepSource.isPlaying)
+            {
+                footstepSource.Play();
+            }
+
+            // 根據是否衝刺調整音調 (Pitch)
+            // 走路 Pitch = 1.0 (正常速度), 跑步 Pitch = 1.5 (快轉 1.5 倍)
+            bool isSprinting = Input.GetKey(KeyCode.LeftShift);
+            float targetPitch = isSprinting ? sprintPitch : walkPitch;
+            
+            // 平滑過渡音調，聽起來更自然
+            footstepSource.pitch = Mathf.Lerp(footstepSource.pitch, targetPitch, Time.deltaTime * 5f);
+        }
+        else
+        {
+            // 停止移動時，停止播放
+            if (footstepSource.isPlaying)
+            {
+                footstepSource.Stop();
+            }
         }
     }
 }
