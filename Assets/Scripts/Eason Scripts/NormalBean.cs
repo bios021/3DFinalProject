@@ -4,31 +4,31 @@ using UnityEngine;
 
 public class NormalBean : MonoBehaviour
 {
-    [Header("¦º¤`³]©w")]
-    public float destroyDelay = 3.0f; // ­Ë¤U«á¦h¤[®ø¥¢
-    public bool isDead = false;       // ¬O§_¤w¸g¦º¤`¡]°ßÅª¡^
+    [Header("åŸºæœ¬è¨­å®š")]
+    public float destroyDelay = 3.0f; // å€’ä¸‹å¾Œå¤šä¹…åˆªé™¤
+    public bool isDead = false;       // æ˜¯å¦å·²ç¶“æ­»äº¡(ä¾›å¤–éƒ¨è®€å–)
 
-    [Header("Án­µ¤Ş¾É²¾°Ê³]©w")]
-    public float moveSpeed = 2.0f;          // ²¾°Ê³t«×
-    public float hearingRange = 15.0f;      // Å¥Ä±½d³ò (¶W¹L¦¹¶ZÂ÷Å¥¤£¨ì)
-    public float hearingThreshold = 0.15f;  // ­µ¶qìH­È (¶W¹L¦¹­µ¶q¤~²¾°Ê)
-    public float stopDistance = 1.5f;       // ¶ZÂ÷ª±®a¦hªñ°±¤î (Á×§K¬ï¼Ò)
+    [Header("è½è²éŸ³ç§»å‹•è¨­å®š")]
+    public float moveSpeed = 2.0f;          // ç§»å‹•é€Ÿåº¦
+    public float hearingRange = 15.0f;      // è½è¦ºç¯„åœ (è¶…éé€™è·é›¢å°±è½ä¸åˆ°)
+    public float hearingThreshold = 0.15f;  // éŸ³é‡é–€æª» (è¶…éé€™éŸ³é‡æ‰ç§»å‹•)
+    public float stopDistance = 1.5f;       // è·é›¢ç›®æ¨™å¤šè¿‘åœæ­¢ (é¿å…ç©¿æ¨¡)
 
-    private RhythmCombat rhythmCombat;      // ¥Î¨Ó¨ú±o­µ¶q»Pª±®a¦ì¸m
-    private Animator animator;              // ¥Î¨Ó±±¨î°Êµe
+    private RhythmCombat rhythmCombat;      // ç”¨ä¾†å–å¾—éŸ³é‡å’Œç›®æ¨™ä½ç½®
+    private Animator animator;              // ç”¨ä¾†æ§åˆ¶å‹•ç•«
 
-    // ¡i·s¼W¡j³Q²o¤Ş¬ÛÃöÅÜ¼Æ
-    private Transform dragTarget; // ²o¤Ş¥Ø¼Ğ (³q±`¬Oª±®a)
+    // ã€æ–°å¢ã€‘è¢«æ‹–æ‹½çš„ç›¸é—œè®Šæ•¸
+    private Transform dragTarget; // æ‹–æ‹½ç›®æ¨™ (é€šå¸¸æ˜¯ç©å®¶)
     private bool isBeingDragged = false;
-    private float dragStopDistance = 2.0f; // Â÷ª±®a¦hªñ·|°±¤U¨Ó
+    private float dragStopDistance = 2.0f; // è·Ÿç©å®¶å¤šè¿‘æœƒåœä¸‹ä¾†
 
     void Start()
     {
-        // ¨ú±o³õ´º¤¤ªº RhythmCombat
+        // å°‹æ‰¾å ´æ™¯ä¸­çš„ RhythmCombat
         rhythmCombat = FindObjectOfType<RhythmCombat>();
         if (rhythmCombat == null)
         {
-            Debug.LogWarning($"{name}: §ä¤£¨ì RhythmCombat¡AµLªk°»´úÁn­µ¡C");
+            Debug.LogWarning($"{name}: æ‰¾ä¸åˆ° RhythmCombat,ç„¡æ³•è½è²éŸ³ã€‚");
         }
 
         animator = GetComponent<Animator>();
@@ -38,14 +38,14 @@ public class NormalBean : MonoBehaviour
     {
         if (isDead) return;
 
-        // ¡i·s¼W¡j¦pªG¥¿¦b³Q²o¤Ş¡AÀu¥ı³B²z²o¤ŞÅŞ¿è
+        // ã€æ–°å¢ã€‘å¦‚æœæ­£åœ¨è¢«æ‹–æ‹½,åªè™•ç†æ‹–æ‹½é‚è¼¯
         if (isBeingDragged && dragTarget != null)
         {
             HandleDragMovement();
         }
         else
         {
-            // §_«h¤~°õ¦æ­ì¥»ªºÅ¥Ä±²¾°Ê
+            // å¦å‰‡æ‰åŸ·è¡Œæœ¬ä¾†çš„è½è¦ºé‚è¼¯
             HandleSoundMovement();
         }
     }
@@ -56,17 +56,17 @@ public class NormalBean : MonoBehaviour
 
         if (rhythmCombat != null)
         {
-            // 1. ¨ú±o¥Ø¼Ğ¦ì¸m (ª±®a/³Á§J­·¦ì¸m)
-            // RhythmCombat.spawnPoint ³q±`¬Oª±®a¦ì¸m©ÎÁn·½¤¤¤ß
+            // 1. å–å¾—ç›®æ¨™ä½ç½® (ç©å®¶/è¼¸å…¥é»ä½ç½®)
+            // RhythmCombat.spawnPoint é€šå¸¸æ˜¯ç©å®¶ä½ç½®æˆ–éŸ³ç¬¦ç”Ÿæˆè™•
             Transform target = (rhythmCombat.spawnPoint != null) ? rhythmCombat.spawnPoint : rhythmCombat.transform;
 
-            // 2. ­pºâ¶ZÂ÷
+            // 2. è¨ˆç®—è·é›¢
             float distance = Vector3.Distance(transform.position, target.position);
 
-            // 3. §PÂ_¬O§_¦bÅ¥Ä±½d³ò¤º ¥B ©|¥¼¶K¨ìª±®aÁy¤W
+            // 3. åˆ¤æ–·æ˜¯å¦åœ¨è½è¦ºç¯„åœ ä¸” ä¸æœƒæ’åˆ°ç©å®¶èº«ä¸Š
             if (distance <= hearingRange && distance > stopDistance)
             {
-                // 4. §PÂ_­µ¶q¬O§_¨¬°÷
+                // 4. åˆ¤æ–·éŸ³é‡æ˜¯å¦å¤ å¤§
                 if (rhythmCombat.CurrentVolume > hearingThreshold)
                 {
                     MoveTowards(target.position);
@@ -75,37 +75,37 @@ public class NormalBean : MonoBehaviour
             }
         }
 
-        // 5. §ó·s°Êµe (­Y¦³ Animator)
+        // 5. æ›´æ–°å‹•ç•« (è‹¥æœ‰ Animator)
         if (animator != null)
         {
-            // ½Ğ½T«O Animator Controller ¦³ "isWalking" (bool) °Ñ¼Æ¡A©Î¦Û¦æ­×§ï°Ñ¼Æ¦WºÙ
+            // è«‹ç¢ºä¿ Animator Controller æœ‰ "isWalking" (bool) åƒæ•¸,ä¸¦è‡ªè¡Œä¿®æ”¹åƒæ•¸åç¨±
             animator.SetBool("isWalking", isMoving);
         }
     }
 
     void MoveTowards(Vector3 targetPos)
     {
-        // ­pºâ¤è¦V (©¿²¤ Y ¶b°ª«×®t)
+        // è¨ˆç®—æ–¹å‘ (é–å®š Y è»¸åœ¨æ°´å¹³ç³»)
         Vector3 dir = targetPos - transform.position;
         dir.y = 0;
 
         if (dir.sqrMagnitude > 0.001f)
         {
-            // Âà¦V¥Ø¼Ğ
+            // è½‰å‘ç›®æ¨™
             Quaternion targetRot = Quaternion.LookRotation(dir);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 10f);
 
-            // «e¶i
+            // å‰é€²
             transform.position += transform.forward * moveSpeed * Time.deltaTime;
         }
     }
 
-    // ¡i·s¼W¡j³B²z³Q²o¤Şªº²¾°Ê
+    // ã€æ–°å¢ã€‘è™•ç†è¢«æ‹–æ‹½çš„ç§»å‹•
     void HandleDragMovement()
     {
         float dist = Vector3.Distance(transform.position, dragTarget.position);
         
-        // ¦pªG¶ZÂ÷¤j©ó°±¤î¶ZÂ÷¡A´N©¹¥Ø¼Ğ²¾°Ê
+        // å¦‚æœè·é›¢å¤§æ–¼åœæ­¢è·é›¢,å°±è·Ÿè‘—ç›®æ¨™ç§»å‹•
         if (dist > dragStopDistance)
         {
             MoveTowards(dragTarget.position);
@@ -114,68 +114,68 @@ public class NormalBean : MonoBehaviour
         }
         else
         {
-            // ¸ôµ{°÷ªñ¤F¡A°±¤U¨Ó
+            // å¤ æ¥è¿‘äº†,åœä¸‹ä¾†
             if (animator != null) animator.SetBool("isWalking", false);
         }
     }
 
-    // ¡i·s¼W¡j¶}©l³Q²o¤Ş
+    // ã€æ–°å¢ã€‘é–‹å§‹è¢«æ‹–æ‹½
     public void StartDragging(Transform target)
     {
         dragTarget = target;
         isBeingDragged = true;
-        Debug.Log($"{name} ¶}©l³Q²o¤Ş¡I");
+        Debug.Log($"{name} é–‹å§‹è¢«æ‹–æ‹½!");
     }
 
-    // ¡i·s¼W¡j°±¤î³Q²o¤Ş
+    // ã€æ–°å¢ã€‘åœæ­¢è¢«æ‹–æ‹½
     public void StopDragging()
     {
         isBeingDragged = false;
         dragTarget = null;
-        Debug.Log($"{name} °±¤î³Q²o¤Ş¡I");
+        Debug.Log($"{name} åœæ­¢è¢«æ‹–æ‹½!");
     }
 
-    // ©I¥s¦¹¨ç¦¡¨ÓÄ²µo¦º¤`¬yµ{
+    // å¤–éƒ¨å‘¼å«é€™å€‹æ–¹æ³•ä¾†è§¸ç™¼æ­»äº¡æµç¨‹
     public void Die()
     {
-        if (isDead) return; // Á×§K­«½ÆÄ²µo
+        if (isDead) return; // é¿å…é‡è¤‡è§¸ç™¼
         isDead = true;
 
-        Debug.Log($"{name} ³Q§ì¨ì¤F¡A­Ë¤U¡I");
+        Debug.Log($"{name} è¢«åƒäº†,å€’ä¸‹!");
 
-        // 1. °±¤î²¾°Ê¦æ¬°
-        // ¦pªG¦³ CrazyFan ¸}¥»¡]·|½Ä¦V»R¥x¡^¡A±N¨äÃö³¬
+        // 1. åœæ­¢è¡Œç‚ºè…³æœ¬
+        // å¦‚æœæœ‰ CrazyFan ä¹‹é¡ä¹Ÿæœƒæ”»æ“Šç©å®¶çš„è…³æœ¬,å°±åœç”¨å®ƒ
         var fanScript = GetComponent<CrazyFan>();
         if (fanScript != null) fanScript.enabled = false;
 
-        // ¦pªG¦³ NavMeshAgent¡A¤]À³¸ÓÃö³¬
+        // å¦‚æœæœ‰ NavMeshAgent,ä¹Ÿåœç”¨å®ƒ
         var agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         if (agent != null) agent.enabled = false;
 
-        // 2. °±¤î°Êµe
-        // °±¥Î Animator ¥H¨¾¤î¥¦Ä~Äò±±¨î¼Ò«¬«º¶Õ©ÎÂĞ»\±ÛÂà
+        // 2. åœæ­¢å‹•ç•«
+        // ä¿ç•™ Animator ä»¥å…ä¹‹å¾Œæ§åˆ¶å€’ä¸‹çš„å‹•ç•«æˆ–è¨±æœƒç”¨åˆ°
         if (animator != null)
         {
             animator.enabled = false;
         }
 
-        // 3. ²¾°£ Collider (Á×§K«ÍÅé¾×¸ô©Î³Q­«½Æ°»´ú)
+        // 3. åœç”¨ Collider (é¿å…å±é«”é‚„èƒ½è¢«ç¢°æ’æˆ–æ”»æ“Š)
         var col = GetComponent<Collider>();
         if (col != null) col.enabled = false;
 
-        // 4. °õ¦æ­Ë¤U°Êµe
+        // 4. æ’­æ”¾å€’ä¸‹å‹•ç•«
         StartCoroutine(FallDownRoutine());
 
-        // 5. ­Ë¼Æ¾P·´
+        // 5. å¹¾ç§’å¾Œåˆªé™¤
         Destroy(gameObject, destroyDelay);
     }
 
-    // Â²³æªº­Ë¤U®ÄªG¡G¦b 0.5 ¬í¤º±ÛÂà 90 «×½ö¥­
+    // ç°¡å–®çš„å€’ä¸‹æ•ˆæœ:åœ¨ 0.5 ç§’å…§æ—‹è½‰ 90 åº¦å€’ä¸‹
     private IEnumerator FallDownRoutine()
     {
         Quaternion startRot = transform.rotation;
-        // µø¼Ò«¬¶b¦V¦Ó©w¡A³q±`Â¶ X ¶b©Î Z ¶b±ÛÂà 90 «×·|­Ë¤U
-        // ³o¸Ì°²³]Â¶ X ¶b­Ë¤U (¦V«e©Î¦V«á)
+        // å‡è¨­è§’è‰²æ­£å‘å‰,é€šå¸¸æ²¿ X è»¸æˆ– Z è»¸è½‰ 90 åº¦æœƒå€’ä¸‹
+        // é€™è£¡å‡è¨­æ²¿ X è»¸å€’ä¸‹ (å‘å‰å€’å‘å¾Œ)
         Quaternion endRot = startRot * Quaternion.Euler(-90, 0, 0); 
         
         float duration = 0.5f;
