@@ -3,40 +3,40 @@ using UnityEngine.UI;
 
 public class RhythmCombat : MonoBehaviour
 {
-    [Header("¸`«µ³]©w")]
+    [Header("ç¯€å¥è¨­å®š")]
     public float bpm = 120f;
     public float timeWindow = 0.15f;
 
-    [Header("UI ³]©w (·Æ°Ê¦¡­y¹D)")]
-    public RectTransform leftBar;       // ¥ªÃä²¾°Êªºµu½u
-    public RectTransform rightBar;      // ¥kÃä²¾°Êªºµu½u
-    public Image centerMarker;          // ¤¤¶¡¤£°Êªº°ò·Ç½u (¥Î¨ÓÅÜ¦â¦^õX)
+    [Header("UI è¨­å®š (æ»‘å‹•å¼è»Œé“)")]
+    public RectTransform leftBar;       // å·¦é‚Šç§»å‹•çš„çŸ­ç·š
+    public RectTransform rightBar;      // å³é‚Šç§»å‹•çš„çŸ­ç·š
+    public Image centerMarker;          // ä¸­é–“ä¸å‹•çš„åŸºæº–ç·š (ç”¨ä¾†è®Šè‰²å›é¥‹)
 
-    public float trackWidth = 200f;     // ­y¹DÁ`¼e«×ªº¤@¥b (¤]´N¬O Bar ¶}©lªº¶ZÂ÷)
+    public float trackWidth = 200f;     // è»Œé“ç¸½å¯¬åº¦çš„ä¸€åŠ (ä¹Ÿå°±æ˜¯ Bar é–‹å§‹çš„è·é›¢)
 
-    public Color normalColor = Color.white;   // ¥­±`ÃC¦â
-    public Color successColor = Color.cyan;   // ¦¨¥\®ÉªºÃC¦â («ØÄ³«G¤@ÂI)
+    public Color normalColor = Color.white;   // å¹³å¸¸é¡è‰²
+    public Color successColor = Color.cyan;   // æˆåŠŸæ™‚çš„é¡è‰² (å»ºè­°äº®ä¸€é»)
 
-    [Header("³Á§J­·³]©w")]
+    [Header("éº¥å…‹é¢¨è¨­å®š")]
     [Range(0.001f, 1f)]
     public float micThreshold = 0.1f;
     public float inputCooldown = 0.3f;
     public bool showDebugLog = true;
 
-    [Header("µøÄ±»P­µ®Ä")]
-    public Transform spawnPoint; // «O¯d spawnPoint ¨Ñ¨ä¥L¸}¥» (¦p MonsterBean) °Ñ¦ÒÁn·½¦ì¸m
+    [Header("è¦–è¦ºèˆ‡éŸ³æ•ˆ")]
+    public Transform spawnPoint; // ä¿ç•™ spawnPoint ä¾›å…¶ä»–è…³æœ¬ (å¦‚ MonsterBean) åƒè€ƒè²æºä½ç½®
     public AudioSource beatMusic;
     public AudioSource sfxSource;
     public AudioClip successClip;
 
     [Range(1f, 100f)]
-    public float sensitivityMultiplier = 1000f; // ¹w³]©ñ¤j 10 ­¿
+    public float sensitivityMultiplier = 1000f; // é è¨­æ”¾å¤§ 10 å€
 
-    // --- ¤º³¡ÅÜ¼Æ ---
+    // --- å…§éƒ¨è®Šæ•¸ ---
     private float beatInterval;
     private float timer;
 
-    // ³Á§J­·ÅÜ¼Æ
+    // éº¥å…‹é¢¨è®Šæ•¸
     private AudioClip micClip;
     private string micName;
     private float lastTriggerTime;
@@ -47,10 +47,10 @@ public class RhythmCombat : MonoBehaviour
         beatInterval = 60f / bpm;
         if (beatMusic != null) beatMusic.Play();
 
-        // ªì©l¤ÆÃC¦â
+        // åˆå§‹åŒ–é¡è‰²
         if (centerMarker != null) centerMarker.color = normalColor;
 
-        // ªì©l¤Æ³Á§J­·
+        // åˆå§‹åŒ–éº¥å…‹é¢¨
         if (Microphone.devices.Length > 0)
         {
             micName = Microphone.devices[0];
@@ -58,25 +58,25 @@ public class RhythmCombat : MonoBehaviour
         }
     }
 
-    public float CurrentVolume { get; private set; } // Åı¥~³¡¥u¯àÅª¨ú¡A¤£¯à­×§ï
+    public float CurrentVolume { get; private set; } // è®“å¤–éƒ¨åªèƒ½è®€å–ï¼Œä¸èƒ½ä¿®æ”¹
 
-    // ­×§ï Update ¨ç¦¡
+    // ä¿®æ”¹ Update å‡½å¼
     void Update()
     {
         timer += Time.deltaTime;
         UpdateSliderUI();
 
-        // ¨ú±o­µ¶q
+        // å–å¾—éŸ³é‡
         float currentLoudness = GetLoudnessFromMic();
 
-        // --- ·s¼W³o¤@¦æ¡G±N­µ¶q¦s¨ì¤½¶}ÅÜ¼Æ ---
+        // --- æ–°å¢é€™ä¸€è¡Œï¼šå°‡éŸ³é‡å­˜åˆ°å…¬é–‹è®Šæ•¸ ---
         CurrentVolume = currentLoudness;
         // ------------------------------------
 
         if (showDebugLog && currentLoudness > 0.01f)
-            Debug.Log($"¥Ø«e­µ¶q: {currentLoudness}");
+            Debug.Log($"ç›®å‰éŸ³é‡: {currentLoudness}");
 
-        // ­ì¥»ªº§PÂ_ÅŞ¿è«O«ù¤£ÅÜ...
+        // åŸæœ¬çš„åˆ¤æ–·é‚è¼¯ä¿æŒä¸è®Š...
         if (currentLoudness > micThreshold && (Time.time - lastTriggerTime) > inputCooldown)
         {
             lastTriggerTime = Time.time;
@@ -84,35 +84,35 @@ public class RhythmCombat : MonoBehaviour
         }
     }
 
-    // --- ·s¼W¡G¨â°¼©¹¤¤¶¡²¾°Êªº°Êµe ---
+    // --- æ–°å¢ï¼šå…©å´å¾€ä¸­é–“ç§»å‹•çš„å‹•ç•« ---
     void UpdateSliderUI()
     {
         if (leftBar == null || rightBar == null) return;
 
-        // ºâ¥X¥Ø«e¶i«× 0.0 ~ 1.0
-        // 0.0 = ¸`©ç­è¶}©l (³Ì»·)
-        // 1.0 = ¸`©çÂI (¤¤¶¡)
+        // ç®—å‡ºç›®å‰é€²åº¦ 0.0 ~ 1.0
+        // 0.0 = ç¯€æ‹å‰›é–‹å§‹ (æœ€é )
+        // 1.0 = ç¯€æ‹é» (ä¸­é–“)
         float progress = (timer % beatInterval) / beatInterval;
 
-        // ­pºâ²{¦bÀ³¸Ó¦bªº X ¶b¦ì¸m
-        // Mathf.Lerp(¶}©l¦ì¸m, µ²§ô¦ì¸m, ¶i«×)
-        // §Ú­Ì§Æ±æ±q trackWidth ²¾°Ê¨ì 0
+        // è¨ˆç®—ç¾åœ¨æ‡‰è©²åœ¨çš„ X è»¸ä½ç½®
+        // Mathf.Lerp(é–‹å§‹ä½ç½®, çµæŸä½ç½®, é€²åº¦)
+        // æˆ‘å€‘å¸Œæœ›å¾ trackWidth ç§»å‹•åˆ° 0
         float currentX = Mathf.Lerp(trackWidth, 0f, progress);
 
-        // ³]©w¥ªÃä Bar ªº¦ì¸m (X ¬°­t­È)
+        // è¨­å®šå·¦é‚Š Bar çš„ä½ç½® (X ç‚ºè² å€¼)
         leftBar.anchoredPosition = new Vector2(-currentX, 0);
 
-        // ³]©w¥kÃä Bar ªº¦ì¸m (X ¬°¥¿­È)
+        // è¨­å®šå³é‚Š Bar çš„ä½ç½® (X ç‚ºæ­£å€¼)
         rightBar.anchoredPosition = new Vector2(currentX, 0);
 
-        // ÃC¦âºCºC²H¥X¦^¥¿±`¦â (¦pªG­è­è¦¨¥\ÅÜ¦â¤F)
+        // é¡è‰²æ…¢æ…¢æ·¡å‡ºå›æ­£å¸¸è‰² (å¦‚æœå‰›å‰›æˆåŠŸè®Šè‰²äº†)
         if (centerMarker != null)
         {
             centerMarker.color = Color.Lerp(centerMarker.color, normalColor, Time.deltaTime * 5f);
         }
     }
 
-    // ... (GetLoudnessFromMic ¸ò­ì¥»¤@¼Ë¡A¬Ù²¤¥H¸`¬Ù½g´T) ...
+    // ... (GetLoudnessFromMic è·ŸåŸæœ¬ä¸€æ¨£ï¼Œçœç•¥ä»¥ç¯€çœç¯‡å¹…) ...
     float GetLoudnessFromMic()
     {
         if (micClip == null) return 0;
@@ -141,7 +141,7 @@ public class RhythmCombat : MonoBehaviour
         else
         {
             Debug.Log("Miss!");
-            // ¥i¿ï¡G¥¢±Ñ®É¤¤¶¡ÅÜ¬õ¦â
+            // å¯é¸ï¼šå¤±æ•—æ™‚ä¸­é–“è®Šç´…è‰²
             // if (centerMarker != null) centerMarker.color = Color.red;
         }
     }
@@ -150,13 +150,13 @@ public class RhythmCombat : MonoBehaviour
     {
         Debug.Log("Perfect!");
 
-        // UI ¦^õX¡G¤¤¶¡¨º®Ú½uÅÜ«G¦â
+        // UI å›é¥‹ï¼šä¸­é–“é‚£æ ¹ç·šè®Šäº®è‰²
         if (centerMarker != null)
         {
             centerMarker.color = successColor;
         }
 
-        // ¼½©ñ¦¨¥\­µ®Ä
+        // æ’­æ”¾æˆåŠŸéŸ³æ•ˆ
         if (sfxSource != null && successClip != null)
         {
             sfxSource.PlayOneShot(successClip);
