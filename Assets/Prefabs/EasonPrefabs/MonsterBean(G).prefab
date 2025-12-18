@@ -1078,7 +1078,7 @@ MonoBehaviour:
   hearingThreshold: 0.2
   hearingCooldown: 1
   moveToSoundSpeed: 2.5
-  aggroRange: 5
+  aggroRange: 3
   chaseSpeed: 3.5
   attackRange: 1.2
   stopDistance: 1
