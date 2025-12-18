@@ -17,6 +17,11 @@ public class NormalBean : MonoBehaviour
     private RhythmCombat rhythmCombat;      // 用來取得音量與玩家位置
     private Animator animator;              // 用來控制動畫
 
+    // 【新增】被牽引相關變數
+    private Transform dragTarget; // 牽引目標 (通常是玩家)
+    private bool isBeingDragged = false;
+    private float dragStopDistance = 2.0f; // 離玩家多近會停下來
+
     void Start()
     {
         // 取得場景中的 RhythmCombat
@@ -31,9 +36,18 @@ public class NormalBean : MonoBehaviour
 
     void Update()
     {
-        if (isDead) return; // 死亡後不執行移動邏輯
+        if (isDead) return;
 
-        HandleSoundMovement();
+        // 【新增】如果正在被牽引，優先處理牽引邏輯
+        if (isBeingDragged && dragTarget != null)
+        {
+            HandleDragMovement();
+        }
+        else
+        {
+            // 否則才執行原本的聽覺移動
+            HandleSoundMovement();
+        }
     }
 
     void HandleSoundMovement()
@@ -84,6 +98,41 @@ public class NormalBean : MonoBehaviour
             // 前進
             transform.position += transform.forward * moveSpeed * Time.deltaTime;
         }
+    }
+
+    // 【新增】處理被牽引的移動
+    void HandleDragMovement()
+    {
+        float dist = Vector3.Distance(transform.position, dragTarget.position);
+        
+        // 如果距離大於停止距離，就往目標移動
+        if (dist > dragStopDistance)
+        {
+            MoveTowards(dragTarget.position);
+            
+            if (animator != null) animator.SetBool("isWalking", true);
+        }
+        else
+        {
+            // 路程夠近了，停下來
+            if (animator != null) animator.SetBool("isWalking", false);
+        }
+    }
+
+    // 【新增】開始被牽引
+    public void StartDragging(Transform target)
+    {
+        dragTarget = target;
+        isBeingDragged = true;
+        Debug.Log($"{name} 開始被牽引！");
+    }
+
+    // 【新增】停止被牽引
+    public void StopDragging()
+    {
+        isBeingDragged = false;
+        dragTarget = null;
+        Debug.Log($"{name} 停止被牽引！");
     }
 
     // 呼叫此函式來觸發死亡流程

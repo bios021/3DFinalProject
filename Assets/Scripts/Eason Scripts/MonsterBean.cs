@@ -49,6 +49,10 @@ public class MonsterBean : MonoBehaviour
     private RhythmCombat rhythmCombat;
     private Transform currentTarget; 
 
+    // 【新增】凍結狀態變數
+    private bool isFrozen = false;
+    private float freezeTimer = 0f;
+
     void Start()
     {
         initialPosition = transform.position;
@@ -63,6 +67,18 @@ public class MonsterBean : MonoBehaviour
 
     void Update()
     {
+        // 【新增】如果被凍結，就跳過所有邏輯
+        if (isFrozen)
+        {
+            freezeTimer -= Time.deltaTime;
+            if (freezeTimer <= 0)
+            {
+                isFrozen = false;
+                Debug.Log($"{name} 解除凍結！");
+            }
+            return; // 直接結束 Update，不執行移動或攻擊
+        }
+
         // --- 決策邏輯 ---
         // 如果處於特殊狀態 (威嚇或撤退)，鎖定決策，直到狀態結束
         if (state == State.Intimidate || state == State.Retreat)
@@ -373,5 +389,13 @@ public class MonsterBean : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, hearingRange);
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, aggroRange);
+    }
+
+    // 【新增】被外部呼叫的凍結方法
+    public void Freeze(float duration)
+    {
+        isFrozen = true;
+        freezeTimer = duration;
+        Debug.Log($"{name} 被凍結了 {duration} 秒！");
     }
 }

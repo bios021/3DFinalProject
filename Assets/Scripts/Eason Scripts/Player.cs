@@ -153,4 +153,16 @@ public class Player : MonoBehaviour
         // 處理死亡邏輯 (例如重置場景或顯示 Game Over)
         if (fpsController != null) fpsController.lockInput = true;
     }
+
+    // 【新增】回血功能
+    public void Heal(int amount)
+    {
+        currentHealth += amount;
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+        Debug.Log($"Player 回血! 目前血量: {currentHealth}");
+        UpdateHealthUI();
+    }
 }
