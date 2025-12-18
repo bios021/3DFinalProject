@@ -5677,7 +5677,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -164.38916, w: -54.279068}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -5810,7 +5810,7 @@ PrefabInstance:
     - target: {fileID: 963804902497505159, guid: 2600e32258f450949a01c72405adc7bf,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 55.264187
+      value: 54.77
       objectReference: {fileID: 0}
     - target: {fileID: 963804902497505159, guid: 2600e32258f450949a01c72405adc7bf,
         type: 3}
@@ -5820,7 +5820,7 @@ PrefabInstance:
     - target: {fileID: 963804902497505159, guid: 2600e32258f450949a01c72405adc7bf,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -54.92843
+      value: -53.54
       objectReference: {fileID: 0}
     - target: {fileID: 963804902497505159, guid: 2600e32258f450949a01c72405adc7bf,
         type: 3}

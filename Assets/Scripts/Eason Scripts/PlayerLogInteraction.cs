@@ -5,25 +5,25 @@ using TMPro;
 
 public class PlayerLogInteraction : MonoBehaviour
 {
-    [Header("°»´ú³]©w")]
-    public float interactDistance = 3.0f; // ¤¬°Ê¶ZÂ÷
-    public LayerMask interactLayer;       // «ØÄ³³]©w Layer (¨Ò¦p Default) Á×§K»~§P
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½]ï¿½w")]
+    public float interactDistance = 3.0f; // ï¿½ï¿½ï¿½Ê¶Zï¿½ï¿½
+    public LayerMask interactLayer;       // ï¿½ï¿½Ä³ï¿½]ï¿½w Layer (ï¿½Ò¦p Default) ï¿½×§Kï¿½~ï¿½P
 
-    [Header("UI ´£¥Ü")]
-    public TMP_Text hintText; // ¿Ã¹õ·Ç¤ßªþªñªº´£¥Ü¤å¦r (¨Ò¦p: «ö E ¾\Åª)
+    [Header("UI ï¿½ï¿½ï¿½ï¿½")]
+    public TMP_Text hintText; // ï¿½Ã¹ï¿½ï¿½Ç¤ßªï¿½ï¿½ñªº´ï¿½ï¿½Ü¤ï¿½r (ï¿½Ò¦p: ï¿½ï¿½ E ï¿½\Åª)
 
     private Camera playerCam;
     private LogUIManager uiManager;
 
     void Start()
     {
-        playerCam = Camera.main; // §ì¨ú¥DÄá¼v¾÷
-        uiManager = FindObjectOfType<LogUIManager>(); // ¦Û°Ê´M§ä³õ´º¤¤ªº UI ºÞ²z¾¹
+        playerCam = Camera.main; // ï¿½ï¿½ï¿½ï¿½Dï¿½ï¿½vï¿½ï¿½
+        uiManager = FindObjectOfType<LogUIManager>(); // ï¿½Û°Ê´Mï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ UI ï¿½Þ²zï¿½ï¿½
     }
 
     void Update()
     {
-        // ¦pªG¥¿¦bÅª¤é»x¡A´N¤£°õ¦æ°»´ú¡A¨Ã²MªÅ´£¥Ü
+        // ï¿½pï¿½Gï¿½ï¿½ï¿½bÅªï¿½ï¿½xï¿½Aï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½æ°»ï¿½ï¿½ï¿½Aï¿½Ã²Mï¿½Å´ï¿½ï¿½ï¿½
         if (uiManager != null && uiManager.IsReading())
         {
             if (hintText != null) hintText.text = "";
@@ -35,30 +35,30 @@ public class PlayerLogInteraction : MonoBehaviour
 
     void DetectLog()
     {
-        // ±qÄá¼v¾÷¦ì¸m¦V«e¤èµo®g®g½u
+        // ï¿½qï¿½ï¿½vï¿½ï¿½ï¿½ï¿½mï¿½Vï¿½eï¿½ï¿½oï¿½gï¿½gï¿½u
         Ray ray = new Ray(playerCam.transform.position, playerCam.transform.forward);
         RaycastHit hit;
 
-        // µo®g®g½u
+        // ï¿½oï¿½gï¿½gï¿½u
         if (Physics.Raycast(ray, out hit, interactDistance, interactLayer))
         {
-            // ÀË¬d¥´¨ìªºª«¥ó¬O§_¦³ DeveloperLog ¸}¥»
+            // ï¿½Ë¬dï¿½ï¿½ï¿½ìªºï¿½ï¿½ï¿½ï¿½Oï¿½_ï¿½ï¿½ DeveloperLog ï¿½}ï¿½ï¿½
             DeveloperLog1 log = hit.collider.GetComponent<DeveloperLog1>();
             if (log != null)
             {
-                // 1. Åã¥Ü´£¥Ü
-                if (hintText != null) hintText.text = "press [E] to read diary";
+                // 1. ï¿½ï¿½Ü´ï¿½ï¿½ï¿½
+                if (hintText != null) hintText.text = "press [E] to read diary,[Esc] to close";
 
-                // 2. °»´ú¿é¤J
+                // 2. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½J
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     uiManager.ShowLog(log.logContent);
                 }
-                return; // §ä¨ì¥Ø¼Ð«á´Nµ²§ô¡AÁ×§K°õ¦æ¤U¤èªº²MªÅµ{¦¡½X
+                return; // ï¿½ï¿½ï¿½Ø¼Ð«ï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½×§Kï¿½ï¿½ï¿½ï¿½Uï¿½èªºï¿½Mï¿½Åµ{ï¿½ï¿½ï¿½X
             }
         }
 
-        // ¦pªG¨S¥´¨ì¥ô¦óªF¦è¡A©Î¥´¨ìªº¤£¬O¤é»x¡A²MªÅ´£¥Ü
+        // ï¿½pï¿½Gï¿½Sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Fï¿½ï¿½Aï¿½Î¥ï¿½ï¿½ìªºï¿½ï¿½ï¿½Oï¿½ï¿½xï¿½Aï¿½Mï¿½Å´ï¿½ï¿½ï¿½
         if (hintText != null) hintText.text = "";
     }
 }

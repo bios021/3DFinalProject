@@ -1,26 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; // ¤Þ¥Î UI ©R¦WªÅ¶¡ (µ¹ Image ¥Î)
-using TMPro;          // ¤Þ¥Î TextMeshPro ©R¦WªÅ¶¡ (µ¹ TMP_Text ¥Î)
+using UnityEngine.UI; // ï¿½Þ¥ï¿½ UI ï¿½Rï¿½Wï¿½Å¶ï¿½ (ï¿½ï¿½ Image ï¿½ï¿½)
+using TMPro;          // ï¿½Þ¥ï¿½ TextMeshPro ï¿½Rï¿½Wï¿½Å¶ï¿½ (ï¿½ï¿½ TMP_Text ï¿½ï¿½)
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    [Header("ª±®aª¬ºA")]
+    [Header("ï¿½ï¿½ï¿½aï¿½ï¿½ï¿½A")]
     public int maxHealth = 5;
     public int currentHealth;
-    public bool isInvincible = false; // µL¼Äª¬ºA
+    public bool isInvincible = false; // ï¿½Lï¿½Äªï¿½ï¿½A
 
-    [Header("¨ü¶Ë¤ÏÀ³")]
-    public float scareDuration = 2.0f; // ¹Ï¤ùÅã¥Ü®É¶¡
-    public Image scareImage;           // ©ì¤J UI Image (À~¤H¹Ï¤ù)
+    [Header("ï¿½ï¿½ï¿½Ë¤ï¿½ï¿½ï¿½")]
+    public float scareDuration = 2.0f; // ï¿½Ï¤ï¿½ï¿½ï¿½Ü®É¶ï¿½
+    public Image scareImage;           // ï¿½ï¿½J UI Image (ï¿½~ï¿½Hï¿½Ï¤ï¿½)
 
-    [Header("UI Åã¥Ü")]
-    public TMP_Text healthText;        // ­×§ï¡G§ï¥Î TMP_Text ¥H¤ä´© TextMeshPro
+    [Header("UI ï¿½ï¿½ï¿½")]
+    public TMP_Text healthText;        // ï¿½×§ï¿½Gï¿½ï¿½ï¿½ TMP_Text ï¿½Hï¿½ä´© TextMeshPro
 
-    [Header("­µ®Ä³]©w")]
-    public AudioSource audioSource;    // ©ì¤J AudioSource ²Õ¥ó
-    public AudioClip scareSound;       // ©ì¤J³QÀ~¨ìªº­µ®Ä (µu«P)
+    [Header("ï¿½ï¿½ï¿½Ä³]ï¿½w")]
+    public AudioSource audioSource;    // ï¿½ï¿½J AudioSource ï¿½Õ¥ï¿½
+    public AudioClip scareSound;       // ï¿½ï¿½Jï¿½Qï¿½~ï¿½ìªºï¿½ï¿½ï¿½ï¿½ (ï¿½uï¿½P)
 
     private FirstPersonController fpsController;
     private float scareTimer = 0f;
@@ -30,24 +31,24 @@ public class Player : MonoBehaviour
         currentHealth = maxHealth;
         fpsController = GetComponent<FirstPersonController>();
 
-        // ½T«O¤@¶}©l¹Ï¤ù¬OÁôÂÃªº
+        // ï¿½Tï¿½Oï¿½@ï¿½}ï¿½lï¿½Ï¤ï¿½ï¿½Oï¿½ï¿½ï¿½Ãªï¿½
         if (scareImage != null)
         {
             scareImage.gameObject.SetActive(false);
         }
 
-        // ªì©l¤Æ¦å¶qÅã¥Ü
+        // ï¿½ï¿½lï¿½Æ¦ï¿½qï¿½ï¿½ï¿½
         UpdateHealthUI();
     }
 
     void Update()
     {
-        // ¦pªG¥¿¦b³QÀ~ (scareTimer > 0)
+        // ï¿½pï¿½Gï¿½ï¿½ï¿½bï¿½Qï¿½~ (scareTimer > 0)
         if (scareTimer > 0)
         {
             scareTimer -= Time.deltaTime;
 
-            // ®É¶¡¨ì¡A«ì´_±±¨î
+            // ï¿½É¶ï¿½ï¿½ï¿½Aï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½
             if (scareTimer <= 0)
             {
                 RecoverFromScare();
@@ -55,15 +56,15 @@ public class Player : MonoBehaviour
         }
     }
 
-    // ³Q©Çª«©I¥s
+    // ï¿½Qï¿½Çªï¿½ï¿½Iï¿½s
     public void TakeDamage(float damage, Transform attacker)
     {
         if (isInvincible) return;
 
-        currentHealth -= 1; // ¦©¤@ºw¦å
-        Debug.Log($"Player ¨ü¶Ë! ³Ñ¾l¦å¶q: {currentHealth}");
+        currentHealth -= 1; // ï¿½ï¿½ï¿½@ï¿½wï¿½ï¿½
+        Debug.Log($"Player ï¿½ï¿½ï¿½ï¿½! ï¿½Ñ¾lï¿½ï¿½q: {currentHealth}");
 
-        // §ó·s¦å¶q UI
+        // ï¿½ï¿½sï¿½ï¿½q UI
         UpdateHealthUI();
 
         if (currentHealth <= 0)
@@ -72,12 +73,12 @@ public class Player : MonoBehaviour
         }
         else
         {
-            // Ä²µoÅåÀ~ª¬ºA (Åã¥Ü¹Ï¤ù)
+            // Ä²ï¿½oï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½A (ï¿½ï¿½Ü¹Ï¤ï¿½)
             StartScare();
         }
     }
 
-    // ¬°¤F¬Û®e SendMessage ("TakeDamage", float)
+    // ï¿½ï¿½ï¿½Fï¿½Û®e SendMessage ("TakeDamage", float)
     public void TakeDamage(float damage)
     {
         if (isInvincible) return;
@@ -99,22 +100,22 @@ public class Player : MonoBehaviour
 
     void StartScare()
     {
-        isInvincible = true; // ÅåÀ~´Á¶¡µL¼Ä
+        isInvincible = true; // ï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½
         scareTimer = scareDuration;
 
-        // Âê©wª±®a¾Þ§@
+        // ï¿½ï¿½wï¿½ï¿½ï¿½aï¿½Þ§@
         if (fpsController != null)
         {
             fpsController.lockInput = true;
         }
 
-        // Åã¥ÜÀ~¤H¹Ï¤ù
+        // ï¿½ï¿½ï¿½ï¿½~ï¿½Hï¿½Ï¤ï¿½
         if (scareImage != null)
         {
             scareImage.gameObject.SetActive(true);
         }
 
-        // ¼½©ñÅåÀ~­µ®Ä
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½
         if (audioSource != null && scareSound != null)
         {
             audioSource.clip = scareSound;
@@ -124,7 +125,7 @@ public class Player : MonoBehaviour
 
     void RecoverFromScare()
     {
-        // ¸ÑÂê¾Þ§@
+        // ï¿½ï¿½ï¿½ï¿½Þ§@
         if (fpsController != null)
         {
             fpsController.lockInput = false;
@@ -132,13 +133,13 @@ public class Player : MonoBehaviour
         
         isInvincible = false;
         
-        // ÁôÂÃ¹Ï¤ù
+        // ï¿½ï¿½ï¿½Ã¹Ï¤ï¿½
         if (scareImage != null)
         {
             scareImage.gameObject.SetActive(false);
         }
 
-        // °±¤î­µ®Ä (½T«O¤£¶W¹LÅåÀ~®É¶¡)
+        // ï¿½ï¿½ï¿½î­µï¿½ï¿½ (ï¿½Tï¿½Oï¿½ï¿½ï¿½Wï¿½Lï¿½ï¿½ï¿½~ï¿½É¶ï¿½)
         if (audioSource != null)
         {
             audioSource.Stop();
@@ -146,15 +147,38 @@ public class Player : MonoBehaviour
     }
 
     void Die()
+        {
+            Debug.Log("Player æ­»äº¡!");
+            if (healthText != null) healthText.text = "YOU DIED";
+            
+            // éŽ–å®šçŽ©å®¶æ“ä½œ
+            if (fpsController != null) fpsController.lockInput = true;
+
+            // â˜… å‘¼å«çµç®—æµç¨‹
+            StartCoroutine(GameOverSequence());
+        }
+    IEnumerator GameOverSequence()
     {
-        Debug.Log("Player ¦º¤`!");
-        if (healthText != null) healthText.text = "YOU DIED";
+        // æ­¥é©Ÿ A: æ‰¾åˆ°å ´æ™¯å…§æ‰€æœ‰æ¨™ç±¤ç‚º "NormalBean" çš„ç‰©ä»¶ä¸¦éŠ·æ¯€
+        // é€™ç¬¦åˆä½ è¦æ±‚çš„ã€Œæ‰€æœ‰ NormalBean éƒ½ä¸åœ¨å ´ä¸Šã€
+        GameObject[] allBeans = GameObject.FindGameObjectsWithTag("NormalBean");
         
-        // ³B²z¦º¤`ÅÞ¿è (¨Ò¦p­«¸m³õ´º©ÎÅã¥Ü Game Over)
-        if (fpsController != null) fpsController.lockInput = true;
+        foreach (GameObject bean in allBeans)
+        {
+            // ä½ å¯ä»¥åœ¨é€™è£¡åŠ å€‹çˆ†ç‚¸ç‰¹æ•ˆæˆ–æ˜¯æ¶ˆå¤±å‹•ç•«ï¼Œç›®å‰å…ˆç›´æŽ¥éŠ·æ¯€
+            Destroy(bean);
+        }
+
+        // æ­¥é©Ÿ B: åœæ­¢/ç­‰å¾… 3 ç§’
+        // é€™æ™‚å€™çŽ©å®¶å·²ç¶“æ­»æŽ‰ä¸”ä¸èƒ½å‹•ï¼Œç³–è±†ä¹Ÿéƒ½æ¶ˆå¤±äº†
+        yield return new WaitForSeconds(3.0f);
+
+        // æ­¥é©Ÿ C: å°Žå‘ Result Scene
+        // è«‹å°‡ "ResultScene" æ”¹æˆä½ çœŸæ­£çš„çµç®—å ´æ™¯åç¨±
+        SceneManager.LoadScene("Result");
     }
 
-    // ¡i·s¼W¡j¦^¦å¥\¯à
+    // ï¿½iï¿½sï¿½Wï¿½jï¿½^ï¿½ï¿½\ï¿½ï¿½
     public void Heal(int amount)
     {
         currentHealth += amount;
@@ -162,7 +186,7 @@ public class Player : MonoBehaviour
         {
             currentHealth = maxHealth;
         }
-        Debug.Log($"Player ¦^¦å! ¥Ø«e¦å¶q: {currentHealth}");
+        Debug.Log($"Player ï¿½^ï¿½ï¿½! ï¿½Ø«eï¿½ï¿½q: {currentHealth}");
         UpdateHealthUI();
     }
 }
