@@ -951,7 +951,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a54622142249df4eacf1fd5d6710b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScript: {fileID: 0}
+  gameScript: {fileID: 1029889016}
   volumeBarFill: {fileID: 283806443}
   thresholdLine: {fileID: 896535756}
   sensitivitySlider: {fileID: 1436791806}
@@ -2057,6 +2057,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4361012347026574887, guid: 8e955801fb2d7ff45b508a6ac0eb6847,
+        type: 3}
+      propertyPath: aggroRange
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4367234647413579545, guid: 8e955801fb2d7ff45b508a6ac0eb6847,
         type: 3}
       propertyPath: m_Constraints
@@ -2206,6 +2211,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 971319922}
   m_CullTransparentMesh: 1
+--- !u!114 &1029889016 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3499708220492872719, guid: 2226a7075ae39b948b14f47cabb1aa13,
+    type: 3}
+  m_PrefabInstance: {fileID: 209955658}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac4a72b0f1bd5446a108f0176f8dce5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1164740682
 GameObject:
   m_ObjectHideFlags: 0
