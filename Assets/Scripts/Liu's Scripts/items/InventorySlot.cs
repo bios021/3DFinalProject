@@ -37,9 +37,14 @@ public class InventorySlot : MonoBehaviour
         return currentItem == null;
     }
 
-    // 【新增】讓外部可以取得道具名稱
     public string GetItemName()
     {
         return currentItem != null ? currentItem.itemName : "空格子";
+    }
+
+    // 【新增】讓外部可以取得這個格子裡的完整道具資料
+    public ItemData GetItem()
+    {
+        return currentItem;
     }
 }
