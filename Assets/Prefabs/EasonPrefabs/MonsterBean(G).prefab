@@ -1028,7 +1028,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 8.475901, y: 0.00000047683716, z: -5.1571302}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 453713919272149844}
@@ -1078,7 +1078,7 @@ MonoBehaviour:
   hearingThreshold: 0.2
   hearingCooldown: 1
   moveToSoundSpeed: 2.5
-  aggroRange: 3
+  aggroRange: 1
   chaseSpeed: 3.5
   attackRange: 1.2
   stopDistance: 1

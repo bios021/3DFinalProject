@@ -7,18 +7,29 @@ using TMPro;
 public class SafeZone : MonoBehaviour
 {
     [Header("UI Settings")]
-    public TMP_Text scoreText; // 拖入 Canvas 上的 TextMeshPro 組件
+    // 雖然有兩個 SafeZone，但請把同一個 UI Text 物件拖進這兩個 SafeZone 的欄位裡
+    public TMP_Text scoreText; 
     
-    [Header("Audio Settings (Optional)")]
+    [Header("Audio Settings")]
     public AudioClip saveSound; 
     private AudioSource audioSource;
     
-    [Header("Effect Settings (Optional)")]
+    [Header("Effect Settings")]
     public GameObject saveEffectPrefab; 
     
-    // 內部變數
-    private int savedBeanCount = 0;
-    private HashSet<GameObject> savedBeans = new HashSet<GameObject>(); 
+    // 【重點修改 1】加上 static，讓所有 SafeZone 共用這個變數
+    private static int globalSavedCount = 0;
+    
+    // 【重點修改 2】HashSet 也變成 static，防止糖豆在 A區救過後，跑到 B區又被算一次
+    private static HashSet<GameObject> globalSavedBeans = new HashSet<GameObject>(); 
+
+    // 【新增】這個方法保證每次遊戲開始(按 Play 時)分數都會歸零，不然 static 變數會一直累積
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStaticVariables()
+    {
+        globalSavedCount = 0;
+        globalSavedBeans.Clear();
+    }
 
     void Start()
     {
@@ -28,6 +39,7 @@ public class SafeZone : MonoBehaviour
             audioSource = gameObject.AddComponent<AudioSource>();
         }
         
+        // 確保剛開始遊戲時 UI 是正確的
         UpdateScoreUI();
     }
 
@@ -35,18 +47,17 @@ public class SafeZone : MonoBehaviour
     {
         if (other.CompareTag("NormalBean"))
         {
-            // 檢查是否重複
-            if (savedBeans.Contains(other.gameObject))
+            // 檢查是否在「任何一個」SafeZone 被救過了
+            if (globalSavedBeans.Contains(other.gameObject))
             {
-                Debug.Log($"{other.name} already saved."); // 改成英文
+                // 這裡註解掉 Debug，避免多個 SafeZone 重疊時一直跳訊息
+                // Debug.Log($"{other.name} already saved."); 
                 return;
             }
             
-            // 檢查是否死亡
             NormalBean bean = other.GetComponent<NormalBean>();
             if (bean != null && bean.isDead)
             {
-                Debug.Log($"{other.name} is dead, not counting."); // 改成英文
                 return;
             }
             
@@ -56,9 +67,11 @@ public class SafeZone : MonoBehaviour
 
     private void SaveBean(GameObject bean)
     {
-        savedBeans.Add(bean);
-        savedBeanCount++;
+        // 加入全域清單
+        globalSavedBeans.Add(bean);
+        globalSavedCount++; // 增加全域分數
         
+        // 更新 UI (因為是 static 分數，所以不管誰呼叫這行，顯示的總分都一樣)
         UpdateScoreUI();
         
         if (audioSource != null && saveSound != null)
@@ -71,8 +84,7 @@ public class SafeZone : MonoBehaviour
             Instantiate(saveEffectPrefab, bean.transform.position, Quaternion.identity);
         }
         
-        // Log 改成英文
-        Debug.Log($"Saved {bean.name}! Total: {savedBeanCount}");
+        Debug.Log($"Saved {bean.name}! Global Total: {globalSavedCount}");
         
         StartCoroutine(RemoveBeanAfterDelay(bean, 0.5f));
     }
@@ -80,27 +92,27 @@ public class SafeZone : MonoBehaviour
     private IEnumerator RemoveBeanAfterDelay(GameObject bean, float delay)
     {
         yield return new WaitForSeconds(delay);
-        Destroy(bean);
+        if(bean != null) Destroy(bean);
     }
 
     private void UpdateScoreUI()
     {
         if (scoreText != null)
         {
-            // 【重點修改】這裡改成英文，就不會變方塊亂碼了
-            scoreText.text = $"Saved: {savedBeanCount}"; 
+            scoreText.text = $"Saved: {globalSavedCount}"; 
         }
     }
 
+    // 供外部取得總分
     public int GetSavedBeanCount()
     {
-        return savedBeanCount;
+        return globalSavedCount;
     }
 
+    // 手動重置分數
     public void ResetScore()
     {
-        savedBeanCount = 0;
-        savedBeans.Clear();
+        ResetStaticVariables();
         UpdateScoreUI();
     }
 }
