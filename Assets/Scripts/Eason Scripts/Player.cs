@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI; // 引用 UI 命名空間 (給 Image 用)
 using TMPro;          // 引用 TextMeshPro 命名空間 (給 TMP_Text 用)
@@ -149,8 +150,9 @@ public class Player : MonoBehaviour
     {
         Debug.Log("Player 死亡!");
         if (healthText != null) healthText.text = "YOU DIED";
-        
+
         // 處理死亡邏輯 (例如重置場景或顯示 Game Over)
         if (fpsController != null) fpsController.lockInput = true;
+        SceneManager.LoadScene("result");
     }
 }

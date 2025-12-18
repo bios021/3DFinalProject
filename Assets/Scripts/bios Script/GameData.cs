@@ -4,4 +4,7 @@ public static class GameData
     public static int savedCount = 0;      // 拯救的糖豆數量
     public static float timeSpent = 0f;    // 耗時 (秒)
     public static bool isPlayerAlive = true; // 玩家是否存活
+    public static int score = 0;
+    public static string failReason;
+    public static bool isWin;
 }
