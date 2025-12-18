@@ -262,16 +262,25 @@ public class MonsterBean : MonoBehaviour
         if (stateTimer <= 0)
         {
             state = State.Retreat;
+            
             // 設定撤退目標 (背對玩家的方向)
             if (currentTarget != null)
             {
-                Vector3 awayDir = (transform.position - currentTarget.position).normalized;
+                // --- 修改 1: 計算方向時忽略 Y 軸，確保目標點在同一水平面上 ---
+                Vector3 awayDir = transform.position - currentTarget.position;
+                awayDir.y = 0; // 扁平化向量
+                awayDir.Normalize();
+                
                 wanderTarget = transform.position + awayDir * retreatDistance;
             }
             else
             {
                 PickNewWanderTarget(); // 玩家不見了就隨便跑
             }
+
+            // --- 修改 2: 重設計時器，給撤退一個最大時間限制 (例如 3秒) ---
+            // 這樣就算撞牆或卡住，3秒後也會強制回到 Wander 狀態
+            stateTimer = 3.0f; 
         }
     }
 
@@ -280,12 +289,24 @@ public class MonsterBean : MonoBehaviour
         // 撤退狀態：遠離玩家
         MoveTowards(wanderTarget, retreatSpeed);
 
-        // 到達撤退點或距離夠遠 -> 回到 Wander
-        if (Vector3.Distance(transform.position, wanderTarget) < 0.5f)
+        // --- 修改 3: 增加超時判斷 ---
+        stateTimer -= Time.deltaTime;
+
+        // 計算水平距離 (忽略 Y 軸差異)
+        float flatDistance = Vector2.Distance(
+            new Vector2(transform.position.x, transform.position.z), 
+            new Vector2(wanderTarget.x, wanderTarget.z)
+        );
+
+        // 到達撤退點 OR 超時 -> 回到 Wander
+        if (flatDistance < 0.5f || stateTimer <= 0)
         {
             state = State.Wander;
             currentTarget = null; // 放棄仇恨
             lastAttackTime = Time.time; // 重置攻擊冷卻，避免立刻回頭咬
+            
+            // 為了自然銜接，可以立刻找一個新的閒逛點
+            PickNewWanderTarget();
         }
     }
 
