@@ -1081,8 +1081,12 @@ MonoBehaviour:
   aggroRange: 5
   chaseSpeed: 3.5
   attackRange: 1.2
+  stopDistance: 1
   attackDamage: 10
   attackCooldown: 1
+  intimidateDuration: 2
+  retreatDistance: 5
+  retreatSpeed: 2
 --- !u!136 &4595569527128666056
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1098,7 +1102,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -1131,7 +1135,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!1 &8847298005139420230
 GameObject:
