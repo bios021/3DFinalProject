@@ -54,36 +54,34 @@ public class ResultManager : MonoBehaviour
 
         // --- 評分邏輯 (你可以根據自己的遊戲難度調整) ---
 
-        if (!GameData.isPlayerAlive)
-        {
-            // 如果死了，直接 F
-            grade = "F";
-            gradeColor = Color.red;
-        }
-        else
-        {
+        
             // 活著才算分，這裡假設滿分是救 5 隻，且時間小於 3 分鐘(180秒)
-            if (GameData.savedCount >= 5 && GameData.timeSpent < 180)
+            if (GameData.savedCount >= 20)
             {
                 grade = "S";
                 gradeColor = Color.yellow; // 金色
             }
-            else if (GameData.savedCount >= 3)
+            else if (GameData.savedCount >= 15)
             {
                 grade = "A";
                 gradeColor = Color.green;
             }
-            else if (GameData.savedCount >= 1)
+            else if (GameData.savedCount >= 10)
             {
                 grade = "B";
                 gradeColor = Color.cyan;
             }
+            else if (GameData.savedCount >= 5)
+            {
+                grade = "C";
+                gradeColor = Color.cyan;
+            }
             else
             {
-                grade = "C"; // 活著但沒救到人
+                grade = "F"; // 活著但沒救到人
                 gradeColor = Color.white;
             }
-        }
+        
 
         ratingText.text = grade;
         ratingText.color = gradeColor;
