@@ -1140,6 +1140,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3499708220492872719, guid: 2226a7075ae39b948b14f47cabb1aa13,
+        type: 3}
+      propertyPath: micThreshold
+      value: 0.511
+      objectReference: {fileID: 0}
     - target: {fileID: 8335787069609595183, guid: 2226a7075ae39b948b14f47cabb1aa13,
         type: 3}
       propertyPath: healthText
