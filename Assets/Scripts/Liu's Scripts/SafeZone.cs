@@ -70,7 +70,8 @@ public class SafeZone : MonoBehaviour
         // 加入全域清單
         globalSavedBeans.Add(bean);
         globalSavedCount++; // 增加全域分數
-        
+        GameData.savedCount = globalSavedCount;
+
         // 更新 UI (因為是 static 分數，所以不管誰呼叫這行，顯示的總分都一樣)
         UpdateScoreUI();
         

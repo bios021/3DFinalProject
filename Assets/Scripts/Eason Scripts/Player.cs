@@ -149,7 +149,8 @@ public class Player : MonoBehaviour
     void Die()
         {
             Debug.Log("Player 死亡!");
-            if (healthText != null) healthText.text = "YOU DIED";
+        GameData.isPlayerAlive = false;
+        if (healthText != null) healthText.text = "YOU DIED";
             
             // 鎖定玩家操作
             if (fpsController != null) fpsController.lockInput = true;

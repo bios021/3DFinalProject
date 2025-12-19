@@ -17,6 +17,8 @@ public class ResultManager : MonoBehaviour
 
     void Start()
     {
+        Cursor.lockState = CursorLockMode.None; // 解除鎖定，讓滑鼠可以自由移動
+        Cursor.visible = true;                  // 讓滑鼠游標看得到
         // 1. 顯示基本數據
         ShowResults();
 
@@ -37,11 +39,11 @@ public class ResultManager : MonoBehaviour
         // 顯示狀態
         if (GameData.isPlayerAlive)
         {
-            statusText.text = "status: <color=green>生還</color>";
+            statusText.text = "status: <color=green>ALIVE</color>";
         }
         else
         {
-            statusText.text = "status: <color=red>死亡</color>";
+            statusText.text = "status: <color=red>DEAD</color>";
         }
     }
 
@@ -55,7 +57,7 @@ public class ResultManager : MonoBehaviour
         if (!GameData.isPlayerAlive)
         {
             // 如果死了，直接 F
-            grade = "DEAD";
+            grade = "F";
             gradeColor = Color.red;
         }
         else
